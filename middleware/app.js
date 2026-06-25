@@ -34,11 +34,13 @@
 const express = require('express');
 const userRoute = require("./router/userRoute");
 const orderRoute = require("./router/orderRoute");
+const bookRoute = require("./router/bookRoute");
 
 const app = express();
 
 app.use("/users",userRoute);
 app.use("/orders",orderRoute);
+app.use("/books", bookRoute);
 
 
 app.listen(3000 , () => {
