@@ -1,6 +1,7 @@
 const path = require('path');
 
 const getProduct = () =>{
+  
     return path.join(__dirname, "..", "view", "products.html");
     // return "Fetch all products.";
     
