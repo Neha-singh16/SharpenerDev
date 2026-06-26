@@ -7,10 +7,14 @@
 </head>
 <body>
     <h1>Products will be shown in this page.</h1>
-    <form action="/" method="get">
+    <form onsubmit="onSubmitHandler(event)">
         <label for="product">Product Name:</label>
         <input type="text" id="product" name="productName" >
         <button type="submit">Add Product</button>
     </form>
+   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/product.js"></script>
+ 
+
 </body>
 </html>

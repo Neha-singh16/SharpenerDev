@@ -10,12 +10,12 @@ const getProductById = (id) => {
    return `Fetch a product by its ID.: ${id}`;
 }
 
-const addProduct = () => {
-    return "Add a new product.";
-}
+// const addProduct = () => {
+//     return "Add a new product.";
+// }
 
 module.exports = {
     getProduct,
     getProductById,
-    addProduct
+    // addProduct
 };
