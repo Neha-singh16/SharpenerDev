@@ -1,5 +1,20 @@
 const db = require("../utils/db-connections");
 
+const getUser = (req,res) => {
+    const selectQuery = `SELECT * FROM Users`;
+    db.execute(selectQuery, [], (err, results) => {
+        if(err){
+            console.log(err);
+            res.status(500).send(err.message);
+            db.end();
+            return;
+        }
+        res.send(results);
+    });
+}
+
+
+
 const addUser = (req,res) => {
  const {name, email} = req.body;
  
@@ -55,4 +70,4 @@ const deleteUser = (req,res) => {
         res.send(`user  deleted successfully`);
      })
 }
-module.exports = {addUser , updateUser, deleteUser};
+module.exports = {getUser, addUser , updateUser, deleteUser};

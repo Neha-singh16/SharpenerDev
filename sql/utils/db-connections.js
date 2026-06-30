@@ -57,6 +57,15 @@ connection.connect((err) => {
         }
         console.log("User table created successfully");
     })
+
+      connection.execute(createBusesQuery , (err, result) => {
+        if(err){
+            console.log(err);
+            connection.end();
+            return;
+        }
+        console.log("Buses table created successfully");
+    })
 })
 
 
