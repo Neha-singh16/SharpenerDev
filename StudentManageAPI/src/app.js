@@ -2,7 +2,9 @@ const express = require('express');
 const app = express();
 const db = require("../utils/db-connection");
 const studentRouter = require("../router/studentRouter");
-const studentModels = require("../models/students");
+// const studentModels = require("../models/students");
+
+require("../models");
 
 app.use(express.json());
 
@@ -12,7 +14,9 @@ app.get("/", (req,res) => {
 
 app.use("/students", studentRouter);
 
-db.sync({forced: false}).then(()=> {
+
+
+db.sync({alter: true}).then(()=> {
     app.listen(3000, () => {
     console.log("Server is running on port 3000");
 })

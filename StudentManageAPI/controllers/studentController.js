@@ -1,4 +1,6 @@
 const db = require("../utils/db-connection");
+const Students = require("../models/students");
+const identityCard = require("../models/identityCard");
 
 const getStudent = (req,res) => {
     const selectQuery = `SELECT * FROM Students`;
@@ -30,6 +32,22 @@ console.log("Values selected successfully");
 res.send(results);
     })
 
+}
+
+const addValuesToStudentAndIdentityCard = async(req,res) => {
+    try{
+
+        const student = await Students.create(req.body.student);
+        const idCard = await identityCard.create({
+            ...req.body.identityCard,
+            StudentId: student.id
+        })
+
+        res.status(201).json({student,idCard});
+    }catch(err){
+        console.log(err);
+        res.status(500).send(err.message);
+    }
 }
 
 
@@ -88,4 +106,4 @@ const deleteStudent = (req,res) => {
         res.send(`student  deleted successfully`);
      })
 }
-module.exports = {getStudent , getStudentById, addStudent, updateStudent, deleteStudent};
+module.exports = {getStudent , getStudentById, addStudent, updateStudent, deleteStudent, addValuesToStudentAndIdentityCard};
