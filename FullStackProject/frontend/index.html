@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Appointment!!</title>
+
+     <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Booking Appointment</h1>
+        <form id="appointmentForm">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="tel" id="phone" placeholder="Your Phone Number" required>
+            <button type="submit">Book Appointment</button>    </form>
+            <br>
+            <hr>
+            <h2>Appointments</h2>
+            <ul id="appointmentsList"></ul>
+    
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
