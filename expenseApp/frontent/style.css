@@ -1,0 +1,48 @@
+body{
+    background:#f5f7fb;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.expense-card{
+    max-width:700px;
+    margin:auto;
+    background:white;
+    padding:35px;
+    border-radius:15px;
+}
+
+.form-control,
+.form-select{
+    height:48px;
+    border-radius:10px;
+}
+
+.btn-primary{
+    height:48px;
+    font-size:18px;
+    border-radius:10px;
+}
+
+.list-group-item{
+    border-radius:10px !important;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    padding:18px;
+}
+
+.expense-title{
+    font-weight:bold;
+    font-size:18px;
+}
+
+.expense-category{
+    color:#6c757d;
+}
+
+.action-buttons{
+    margin-top:15px;
+}
+
+.action-buttons button{
+    margin-right:10px;
+}
