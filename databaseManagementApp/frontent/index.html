@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Data Manager</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h2>Data Manager</h2>
+
+        <button id="createTableBtn">
+            + Create Table
+        </button>
+
+        <div id="tableList">
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Main Content -->
+
+    <div class="main">
+
+        <div class="header">
+
+            <h1 id="tableTitle">
+                Select a Table
+            </h1>
+
+            <button id="insertRecordBtn">
+                + Insert Record
+            </button>
+
+        </div>
+
+
+
+        <table id="dataTable">
+
+            <thead>
+
+                <tr id="tableHead">
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tableBody">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<!-- Create Table Modal -->
+
+<div class="modal" id="createTableModal">
+
+    <div class="modal-content">
+
+        <h2>Create Table</h2>
+
+        <input
+            type="text"
+            id="tableName"
+            placeholder="Table Name"
+        >
+
+        <div id="columnsContainer">
+
+        </div>
+
+        <button id="addColumn">
+
+            + Add Column
+
+        </button>
+
+        <button id="saveTable">
+
+            Create
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<!-- Insert Record Modal -->
+
+<div class="modal" id="recordModal">
+
+    <div class="modal-content">
+
+        <h2>
+
+            Insert Record
+
+        </h2>
+
+        <div id="recordInputs">
+
+        </div>
+
+        <button id="saveRecord">
+
+            Save
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="app.js"></script>
+
+</body>
+</html>
