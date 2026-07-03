@@ -16,7 +16,7 @@ const addExpense= async(req,res) => {
 const getExpense = async(req,res)=> {
     try{
         const expense = await Expense.findAll();
-         res.status(201).send(expense);
+         res.status(200).send(expense);
 
     }catch(err){
  console.log(err);
@@ -42,9 +42,28 @@ const deleteExpense = async(req,res)=> {
     }
 }
 
+const updateExpense = async(req,res) => {
+    const expenseId = req.params.id;
+    const {amount,description,category} = req.body;
+
+    try{
+        const expense = await Expense.findByPk(expenseId);
+         if(!expense){
+            return res.status(404).send("Expense not found!!");
+        }
+        await expense.update({amount,description,category});
+        res.status(200).send(expense);
+
+    }catch(err){
+         console.log(err);
+        res.status(500).send(err.message);
+    }
+}
+
 module.exports = {
     addExpense,
     getExpense,
-    deleteExpense
+    deleteExpense,
+    updateExpense
 };
    
