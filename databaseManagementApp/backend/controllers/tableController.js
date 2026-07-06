@@ -1,4 +1,5 @@
 const tableService = require("../services/tableService");
+
 async function createTable(req, res) {
   try {
     const {tableName, columns} = req.body;
