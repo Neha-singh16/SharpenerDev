@@ -12,7 +12,6 @@ app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
 
-
 app.use("/users", userRouter);
 app.use(notFound);
 app.use(errorHandler);
