@@ -78,3 +78,39 @@ button:hover{
     font-weight:bold;
 
 }
+
+
+body{
+
+    background:#eef2f7;
+}
+
+.card{
+
+    border:none;
+    border-radius:15px;
+}
+
+.card-header{
+
+    border-radius:15px 15px 0 0 !important;
+}
+
+.list-group-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:10px;
+
+    border-radius:8px;
+
+}
+
+.actionBtns button{
+
+    margin-left:8px;
+}

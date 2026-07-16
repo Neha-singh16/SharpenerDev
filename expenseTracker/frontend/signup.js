@@ -1,11 +1,18 @@
-const form = document.getElementById("signUpForm");
+const signupform = document.getElementById("signUpForm");
+// const loginForm =  document.getElementById("loginForm");
 const list = document.getElementById('usersList');
 
 const msg = document.getElementById("message");
 
 const BASE_URL = "http://localhost:3000/users";
 
-form.addEventListener("submit", signupUser);
+if (signupform) {
+    signupform.addEventListener("submit", signupUser);
+}
+
+// if (loginForm) {
+//     loginForm.addEventListener("submit", loginUser);
+// }
 // window.addEventListener("DOMContentLoaded", loadUsers);
 
 async function signupUser(e) {
@@ -24,16 +31,43 @@ async function signupUser(e) {
 
     msg.style.color = "green";
 
-    form.reset();
+    signupform.reset();
     // loadUsers();
   } catch (err) {
     console.log(err);
     msg.innerHTML = err.response.data.error || "Signup failed!";
 
     msg.style.color = "red";
-    form.reset();
+    signupform.reset();
   }
 }
+
+
+// async function loginUser(e) {
+//   e.preventDefault();
+
+//   const user = {
+//     email: document.getElementById("email").value,
+//     password: document.getElementById("password").value,
+//   };
+
+//   try {
+//     const res = await axios.post(`${BASE_URL}/login`, user);
+//     console.log(res.data);
+//     msg.innerHTML = "Login Successful!";
+
+//     msg.style.color = "green";
+
+//     loginForm.reset();
+//     // loadUsers();
+//   } catch (err) {
+//     console.log(err);
+//     msg.innerHTML = err.response.data.error || "Login failed!";
+
+//     msg.style.color = "red";
+//     loginForm.reset();
+//   }
+// }
 
 // async function loadUsers() {
 //   try {
