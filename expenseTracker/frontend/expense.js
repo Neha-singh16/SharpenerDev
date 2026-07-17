@@ -4,11 +4,17 @@ const form = document.getElementById("expenseForm");
 
 const expenseList = document.getElementById("expenseList");
 
+const premiumBtn = document.getElementById("buyPremiumBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 
 const submitBtn = document.getElementById("submitBtn");
+premiumBtn.addEventListener("click", buyPremium);
 
 let editExpenseId = null;
+
+const cashfree = Cashfree({
+  mode: "sandbox",
+});
 
 const token = localStorage.getItem("token");
 
@@ -31,7 +37,7 @@ async function loadExpenses() {
       Authorization: `Bearer ${token}`,
     },
   });
-     expenseList.innerHTML = ""; 
+  expenseList.innerHTML = "";
 
   res.data.expense.forEach((exp) => {
     displayExpense(exp);
@@ -83,6 +89,84 @@ async function addExpense(e) {
   }
 }
 
+async function buyPremium() {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.post(
+      `${BASE_URL}/purchase/buy-premium`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    console.log(res.data);
+
+    openCashfree(res.data.paymentSessionId, res.data.orderId);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// function openCashfree(
+//   paymentSessionId,
+
+//   orderId,
+// ) {
+//   cashfree
+//     .checkout({
+//       paymentSessionId,
+
+//       redirectTarget: "_modal",
+//     })
+
+//     .then(function () {
+//       console.log("Checkout Closed");
+//     })
+
+//     .catch(function (err) {
+//       console.log(err);
+//     });
+// }
+
+async function openCashfree(paymentSessionId, orderId) {
+  try {
+    await cashfree.checkout({
+      paymentSessionId,
+
+      redirectTarget: "_modal",
+    });
+
+    // Popup closed
+    // Now ask backend to verify payment
+
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post(
+      `${BASE_URL}/purchase/update-transaction-status`,
+
+      {
+        orderId,
+        status: "SUCCESSFUL",
+      },
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    console.log(res.data);
+
+    alert("Payment Verified!");
+
+    location.reload();
+  } catch (err) {
+    console.log(err);
+  }
+}
 function displayExpense(expense) {
   const li = document.createElement("li");
 
@@ -135,27 +219,25 @@ function displayExpense(expense) {
   expenseList.append(li);
 }
 
-
-async function deleteExpense(expenseId){
-  try{
+async function deleteExpense(expenseId) {
+  try {
     const res = await axios.delete(`${BASE_URL}/expenses/${expenseId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-   
+
     loadExpenses();
-  }catch(err){
+  } catch (err) {
     console.log(err);
   }
 }
 
-
-async function editExpense(expense){
+async function editExpense(expense) {
   amount.value = expense.amount;
   description.value = expense.description;
   category.value = expense.category;
   editExpenseId = expense.id;
-//  submitBtn.innerHTML = "Update";
+  //  submitBtn.innerHTML = "Update";
   submitBtn.innerHTML = "Update Expense";
 }
