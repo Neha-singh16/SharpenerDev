@@ -16,20 +16,27 @@ if (!token) {
   window.location.href = "login.html";
 }
 
+console.log(token);
+
 window.addEventListener("DOMContentLoaded", loadExpenses);
+form.addEventListener("submit", addExpense);
 // logoutBtn.addEventListener("click", logout);
-window.addEventListener("DOMContentLoaded", loadExpenses);
 
 async function loadExpenses() {
   const token = localStorage.getItem("token");
 
   const res = await axios.get(`${BASE_URL}/expenses`, {
     headers: {
-      Authorization: token,
+      // Authorization: token,
+      Authorization: `Bearer ${token}`,
     },
   });
+     expenseList.innerHTML = ""; 
 
-  console.log(res.data);
+  res.data.expense.forEach((exp) => {
+    displayExpense(exp);
+  });
+  // console.log(res.data);
 }
 
 async function addExpense(e) {
@@ -44,24 +51,27 @@ async function addExpense(e) {
   try {
     if (editExpenseId) {
       await axios.put(
-        `${BASE_URL}/${editExpenseId}`,
+        `${BASE_URL}/expenses/${editExpenseId}`,
 
         expense,
         {
           headers: {
-            Authorization: token,
+            // Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
+      submitBtn.innerHTML = "Add Expense";
     } else {
       await axios.post(
-        BASE_URL,
+        BASE_URL + "/expenses",
 
         expense,
 
         {
           headers: {
-            Authorization: token,
+            // Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
@@ -123,4 +133,29 @@ function displayExpense(expense) {
   li.append(btnDiv);
 
   expenseList.append(li);
+}
+
+
+async function deleteExpense(expenseId){
+  try{
+    const res = await axios.delete(`${BASE_URL}/expenses/${expenseId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+   
+    loadExpenses();
+  }catch(err){
+    console.log(err);
+  }
+}
+
+
+async function editExpense(expense){
+  amount.value = expense.amount;
+  description.value = expense.description;
+  category.value = expense.category;
+  editExpenseId = expense.id;
+//  submitBtn.innerHTML = "Update";
+  submitBtn.innerHTML = "Update Expense";
 }

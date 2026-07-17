@@ -6,7 +6,7 @@ const sequelize = new Sequelize('expensetracker', 'root', '160308', {
 });
 
 
-
+console.log("Database:", sequelize.config.database);
 (async () => {
   try {
   await sequelize.authenticate();

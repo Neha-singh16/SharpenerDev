@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 
+const generateToken=require("../utils/generateToken");
 async function createUser(req, res) {
   try {
     const { name, email, password } = req.body;
@@ -15,6 +16,7 @@ async function createUser(req, res) {
 async function getAllUsers(req, res) {
   try {
     const users = await User.findAll();
+    console.log(users);
     res.status(200).json({ message: "Users fetched successfully", users });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -40,7 +42,8 @@ async function loginUser(req, res) {
         error: "Invalid credentials",
       });
     }
-    res.status(200).json({ message: "Login successful", user });
+    const token = generateToken(user);
+    res.status(200).json({ message: "Login successful", user, token });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
