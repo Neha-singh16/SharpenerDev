@@ -24,7 +24,12 @@ if (!token) {
 
 console.log(token);
 
-window.addEventListener("DOMContentLoaded", loadExpenses);
+// window.addEventListener("DOMContentLoaded", loadExpenses);
+window.addEventListener("DOMContentLoaded", async () => {
+  await loadExpenses();
+
+  await checkPremiumStatus();
+});
 form.addEventListener("submit", addExpense);
 // logoutBtn.addEventListener("click", logout);
 
@@ -44,6 +49,8 @@ async function loadExpenses() {
   });
   // console.log(res.data);
 }
+
+
 
 async function addExpense(e) {
   e.preventDefault();
@@ -89,84 +96,30 @@ async function addExpense(e) {
   }
 }
 
-async function buyPremium() {
-  try {
-    const token = localStorage.getItem("token");
-    const res = await axios.post(
-      `${BASE_URL}/purchase/buy-premium`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    console.log(res.data);
 
-    openCashfree(res.data.paymentSessionId, res.data.orderId);
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-// function openCashfree(
-//   paymentSessionId,
-
-//   orderId,
-// ) {
-//   cashfree
-//     .checkout({
-//       paymentSessionId,
-
-//       redirectTarget: "_modal",
-//     })
-
-//     .then(function () {
-//       console.log("Checkout Closed");
-//     })
-
-//     .catch(function (err) {
-//       console.log(err);
-//     });
-// }
-
-async function openCashfree(paymentSessionId, orderId) {
-  try {
-    await cashfree.checkout({
-      paymentSessionId,
-
-      redirectTarget: "_modal",
-    });
-
-    // Popup closed
-    // Now ask backend to verify payment
+async function checkPremiumStatus(){
 
     const token = localStorage.getItem("token");
 
-    const res = await axios.post(
-      `${BASE_URL}/purchase/update-transaction-status`,
-
-      {
-        orderId,
-        status: "SUCCESSFUL",
-      },
-
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
+    const res = await axios.get(
+        `${BASE_URL}/profile`,
+        {
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+        }
     );
 
-    console.log(res.data);
+    if(res.data.isPremium){
 
-    alert("Payment Verified!");
+        document.getElementById("buyPremiumCard").style.display="none";
 
-    location.reload();
-  } catch (err) {
-    console.log(err);
-  }
+        document.getElementById("premiumCard").style.display="block";
+
+    }
+
 }
+
 function displayExpense(expense) {
   const li = document.createElement("li");
 

@@ -1,7 +1,7 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 
-const generateToken=require("../utils/generateToken");
+const generateToken = require("../utils/generateToken");
 async function createUser(req, res) {
   try {
     const { name, email, password } = req.body;
@@ -49,4 +49,19 @@ async function loginUser(req, res) {
   }
 }
 
-module.exports = { createUser, getAllUsers, loginUser };
+const getProfile = (req, res) => {
+  const user = req.user;
+  if(!user){
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  res.json({
+    name: user.name,
+
+    email: user.email,
+
+    isPremium: user.isPremium,
+  });
+};
+
+module.exports = { createUser, getAllUsers, loginUser, getProfile };

@@ -173,3 +173,76 @@ font-size:18px;
 background:#4b44d4;
 
 }
+
+
+.premium-success-card{
+    width:350px;
+    margin:auto;
+    background:#fff;
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+    text-align:center;
+    border:2px solid #FFD700;
+}
+
+.premium-badge{
+    width:90px;
+    height:90px;
+    margin:auto;
+    border-radius:50%;
+    background:#FFD700;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:45px;
+}
+
+.premium-success-card h2{
+    margin-top:20px;
+    color:#222;
+}
+
+.premium-success-card p{
+    color:#666;
+}
+
+.premium-status{
+    margin:20px 0;
+    font-weight:bold;
+    color:#0d6efd;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+}
+
+.status-dot{
+    width:10px;
+    height:10px;
+    background:green;
+    border-radius:50%;
+}
+
+.premium-features{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    margin-top:20px;
+}
+
+.feature{
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    gap:12px;
+    padding:12px;
+    border-radius:10px;
+    background:#f7f7f7;
+    transition:.3s;
+}
+
+.feature:hover{
+    background:#e8f2ff;
+    transform:translateX(5px);
+}

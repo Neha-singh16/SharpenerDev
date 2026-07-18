@@ -13,9 +13,9 @@ const buyPremium = async (req, res) => {
 
 const updateTransaction = async (req, res) => {
   try {
-    const { orderId, status } = req.body;
-    const result = await updateTransactionStatus(orderId, status);
-    console.log(result);
+    const { orderId } = req.body;
+    const result = await updateTransactionStatus(orderId);
+    // console.log(result);
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json({
