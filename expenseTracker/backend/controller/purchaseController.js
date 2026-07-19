@@ -1,5 +1,5 @@
 const  { buyPremium: buyPremiumService, updateTransactionStatus}  = require("../services/cashFreeService");
-
+const { getLeaderboard} = require("../services/premiumServices");
 const buyPremium = async (req, res) => {
   try {
     const result = await buyPremiumService(req.user);
@@ -24,4 +24,19 @@ const updateTransaction = async (req, res) => {
   }
 };
 
-module.exports = { buyPremium, updateTransactionStatus: updateTransaction };
+const getLeaderBoard = async(req,res) => {
+  try{
+    if(!req.user.isPremium){
+      return res.status(403).json({message: "Access denied. Premium membership required."})
+    }
+    const result = await getLeaderboard();
+    res.status(200).json(result);
+
+  }catch(err){
+      res.status(500).json({
+      message: err.message,
+    });
+  }
+}
+
+module.exports = { buyPremium, updateTransactionStatus: updateTransaction , getLeaderBoard };

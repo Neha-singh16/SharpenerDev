@@ -1,248 +1,805 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+
+/* ===========================
+   GOOGLE FONT
+=========================== */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+/* ===========================
+   RESET
+=========================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-body{
-    background:#f2f2f2;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+body {
+  background: #f4f7fb;
+
+  min-height: 100vh;
+
+  color: #1f2937;
 }
 
-.container{
+/* ===========================
+   DASHBOARD
+=========================== */
 
-    width:380px;
-    background:white;
+.dashboard {
+  display: grid;
 
-    padding:30px;
+  grid-template-columns: 380px 1fr;
 
-    border-radius:10px;
-
-    box-shadow:0 0 10px rgba(0,0,0,.2);
-
+  min-height: 100vh;
 }
 
-h1{
+/* ===========================
+   SIDEBAR
+=========================== */
 
-    text-align:center;
-    margin-bottom:25px;
+.sidebar {
+  background: linear-gradient(180deg, #4f46e5, #6d28d9);
 
+  padding: 35px 25px;
+
+  color: white;
+
+  position: sticky;
+
+  top: 0;
+
+  height: 100vh;
+
+  overflow-y: auto;
 }
 
-input{
+.logo {
+  font-size: 28px;
 
-    width:100%;
+  font-weight: 700;
 
-    padding:12px;
+  text-align: center;
 
-    margin-bottom:18px;
+  margin-bottom: 40px;
 
-    font-size:16px;
-
+  letter-spacing: 0.5px;
 }
 
-button{
+/* ===========================
+   MAIN CONTENT
+=========================== */
 
-    width:100%;
-
-    padding:12px;
-
-    background:#0d6efd;
-
-    color:white;
-
-    border:none;
-
-    cursor:pointer;
-
-    font-size:16px;
-
+.main-content {
+  padding: 40px;
 }
 
-button:hover{
+/* ===========================
+   CARD
+=========================== */
 
-    background:#0957d4;
+.card {
+  border: none;
 
+  border-radius: 22px;
+
+  overflow: hidden;
+
+  background: white;
+
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
 }
 
-#message{
+/* ===========================
+   HEADER
+=========================== */
 
-    margin-top:20px;
+.card-header {
+  background: white !important;
 
-    text-align:center;
+  color: #222;
 
-    font-weight:bold;
+  border-bottom: 1px solid #ececec;
 
+  padding: 25px 35px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
 }
 
+.card-header h2 {
+  font-size: 30px;
 
-body{
-
-    background:#eef2f7;
+  font-weight: 700;
 }
 
-.card{
+/* ===========================
+   LOGOUT BUTTON
+=========================== */
 
-    border:none;
-    border-radius:15px;
+#logoutBtn {
+  width: auto;
+
+  padding: 10px 22px;
+
+  border-radius: 40px;
+
+  background: #ef4444;
+
+  color: white;
+
+  border: none;
+
+  transition: 0.3s;
+
+  font-weight: 600;
 }
 
-.card-header{
+#logoutBtn:hover {
+  background: #dc2626;
 
-    border-radius:15px 15px 0 0 !important;
+  transform: translateY(-2px);
 }
 
-.list-group-item{
+/* ===========================
+   CARD BODY
+=========================== */
 
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:10px;
-
-    border-radius:8px;
-
+.card-body {
+  padding: 35px;
 }
 
-.actionBtns button{
+/* ===========================
+   FORM
+=========================== */
 
-    margin-left:8px;
+.form-label {
+  font-weight: 600;
+
+  color: #374151;
+
+  margin-bottom: 8px;
 }
 
+.form-control,
+.form-select {
+  border-radius: 12px;
 
-.premium-container{
+  border: 1px solid #d1d5db;
 
-display:flex;
+  padding: 14px;
 
-justify-content:center;
+  font-size: 15px;
 
-margin:20px;
-
+  transition: 0.3s;
 }
 
-.premium-card{
+.form-control:focus,
+.form-select:focus {
+  border-color: #4f46e5;
 
-width:350px;
-
-padding:20px;
-
-border-radius:15px;
-
-box-shadow:0 0 10px rgba(0,0,0,.2);
-
-background:white;
-
-text-align:center;
-
+  box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.18);
 }
 
-.premium-card ul{
+/* ===========================
+   SUBMIT BUTTON
+=========================== */
 
-text-align:left;
+#submitBtn {
+  margin-top: 10px;
 
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+
+  border: none;
+
+  border-radius: 12px;
+
+  font-weight: 600;
+
+  padding: 14px;
+
+  transition: 0.3s;
 }
 
-#buyPremiumBtn{
+#submitBtn:hover {
+  transform: translateY(-2px);
 
-padding:12px;
-
-width:100%;
-
-background:#6c63ff;
-
-color:white;
-
-border:none;
-
-cursor:pointer;
-
-border-radius:8px;
-
-font-size:18px;
-
+  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.25);
 }
 
-#buyPremiumBtn:hover{
+/* ===========================
+   SECTION TITLE
+=========================== */
 
-background:#4b44d4;
+.card-body h3 {
+  margin-top: 25px;
 
+  margin-bottom: 25px;
+
+  font-weight: 700;
+
+  color: #1f2937;
 }
 
+/* ===========================
+   EXPENSE LIST
+=========================== */
 
-.premium-success-card{
-    width:350px;
-    margin:auto;
-    background:#fff;
-    border-radius:18px;
-    padding:30px;
-    box-shadow:0 15px 35px rgba(0,0,0,.12);
-    text-align:center;
-    border:2px solid #FFD700;
+#expenseList {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
 }
 
-.premium-badge{
-    width:90px;
-    height:90px;
-    margin:auto;
-    border-radius:50%;
-    background:#FFD700;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:45px;
+/* ===========================
+   EXPENSE CARD
+=========================== */
+
+.list-group-item {
+  border: none;
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  background: #f8faff;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  transition: 0.3s;
+
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
 }
 
-.premium-success-card h2{
-    margin-top:20px;
-    color:#222;
+.list-group-item:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
-.premium-success-card p{
-    color:#666;
+.list-group-item strong {
+  font-size: 22px;
+
+  color: #4f46e5;
 }
 
-.premium-status{
-    margin:20px 0;
-    font-weight:bold;
-    color:#0d6efd;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:10px;
+.list-group-item small {
+  color: #6b7280;
+
+  font-size: 14px;
 }
 
-.status-dot{
-    width:10px;
-    height:10px;
-    background:green;
-    border-radius:50%;
+/* ===========================
+   ACTION BUTTONS
+=========================== */
+
+.actionBtns {
+  display: flex;
+
+  gap: 10px;
 }
 
-.premium-features{
-    display:flex;
-    flex-direction:column;
-    gap:18px;
-    margin-top:20px;
+.actionBtns button {
+  width: auto;
+
+  padding: 8px 16px;
+
+  border-radius: 8px;
+
+  font-size: 14px;
 }
 
-.feature{
-    display:flex;
-    justify-content:flex-start;
-    align-items:center;
-    gap:12px;
-    padding:12px;
-    border-radius:10px;
-    background:#f7f7f7;
-    transition:.3s;
+/* ===========================
+   DIVIDER
+=========================== */
+
+hr {
+  margin: 35px 0;
+
+  opacity: 0.15;
 }
 
-.feature:hover{
-    background:#e8f2ff;
-    transform:translateX(5px);
+/* ===========================
+   SCROLLBAR
+=========================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b8b8b8;
+
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 992px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    height: auto;
+
+    position: relative;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-body {
+    padding: 20px;
+  }
+
+  .card-header {
+    flex-direction: column;
+
+    gap: 15px;
+
+    align-items: flex-start;
+  }
+
+  .list-group-item {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .actionBtns {
+    width: 100%;
+
+    justify-content: flex-end;
+  }
+}
+
+/* =====================================================
+   PREMIUM SECTION
+===================================================== */
+
+#premiumSection {
+  width: 100%;
+}
+
+#buyPremiumCard,
+#premiumCard {
+  animation: fadeIn 0.4s ease;
+}
+
+/* =====================================================
+   BUY PREMIUM CARD
+===================================================== */
+
+.premium-card {
+  background: linear-gradient(145deg, #ffffff, #f7f9ff);
+
+  border-radius: 24px;
+
+  padding: 35px;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.premium-card h2 {
+  text-align: center;
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  color: #3b3b98;
+
+  margin-bottom: 10px;
+}
+
+.premium-card p {
+  text-align: center;
+
+  color: #666;
+
+  margin-bottom: 30px;
+
+  line-height: 1.6;
+}
+
+.premium-card ul {
+  list-style: none;
+
+  padding: 0;
+
+  margin-bottom: 30px;
+}
+
+.premium-card li {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 15px;
+
+  margin-bottom: 15px;
+
+  border-radius: 14px;
+
+  background: #f7f8fc;
+
+  transition: 0.3s;
+
+  font-weight: 500;
+}
+
+.premium-card li:hover {
+  transform: translateX(8px);
+
+  background: #eef2ff;
+}
+
+/* =====================================================
+   BUY BUTTON
+===================================================== */
+
+#buyPremiumBtn {
+  width: 100%;
+
+  padding: 15px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+#buyPremiumBtn:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 15px 30px rgba(99, 102, 241, 0.35);
+}
+
+/* =====================================================
+   PREMIUM SUCCESS CARD
+===================================================== */
+
+.premium-success-card {
+  background: white;
+
+  border-radius: 24px;
+
+  padding: 35px;
+
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.premium-success-card::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+
+  top: 0;
+
+  width: 100%;
+
+  height: 8px;
+
+  background: linear-gradient(90deg, #ffd700, #ff9800);
+}
+
+.premium-success-card h2 {
+  margin-top: 25px;
+
+  text-align: center;
+
+  font-size: 28px;
+
+  color: #222;
+}
+
+.premium-success-card p {
+  text-align: center;
+
+  color: #666;
+
+  margin-top: 8px;
+}
+
+/* =====================================================
+   PREMIUM BADGE
+===================================================== */
+
+.premium-badge {
+  width: 110px;
+
+  height: 110px;
+
+  margin: auto;
+
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #ffd700, #ff9800);
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  font-size: 52px;
+
+  animation: pulse 2s infinite;
+
+  box-shadow: 0 15px 30px rgba(255, 193, 7, 0.35);
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.premium-status {
+  margin: 25px auto;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 10px;
+
+  font-size: 17px;
+
+  font-weight: 600;
+
+  color: #22c55e;
+}
+
+.status-dot {
+  width: 12px;
+
+  height: 12px;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+}
+
+/* =====================================================
+   FEATURES
+===================================================== */
+
+.premium-features {
+  margin-top: 30px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.feature {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  background: #363944;
+
+  padding: 15px 18px;
+
+  border-radius: 14px;
+
+  transition: 0.3s;
+
+  border-left: 5px solid #5658cb;
+
+  font-weight: 500;
+  /* text-color: black; */
+}
+
+.feature:hover {
+  transform: translateX(8px);
+
+  background: #a5b3e2;
+}
+
+/* =====================================================
+   LEADERBOARD BUTTON
+===================================================== */
+
+#leaderboardBtn {
+  margin-top: 30px;
+
+  width: 100%;
+
+  border: none;
+
+  padding: 15px;
+
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, #ff9800, #ff5722);
+
+  color: white;
+
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+#leaderboardBtn:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 15px 30px rgba(255, 87, 34, 0.3);
+}
+
+/* =====================================================
+   LEADERBOARD
+===================================================== */
+
+#leaderboardContainer {
+  margin-top: 35px;
+}
+
+#leaderboardContainer h3 {
+  text-align: center;
+
+  margin-bottom: 25px;
+
+  color: #3b3b98;
+
+  font-weight: 700;
+}
+
+#leaderboardList {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+#leaderboardList .list-group-item {
+  background: white;
+
+  border-radius: 14px;
+
+  padding: 18px;
+
+  border-left: 6px solid #ffd700;
+
+  transition: 0.3s;
+}
+
+#leaderboardList .list-group-item:hover {
+  transform: translateX(5px);
+}
+
+#leaderboardList .list-group-item:first-child {
+  background: #fff8dc;
+}
+
+#leaderboardList .list-group-item:nth-child(2) {
+  background: #f4f4f4;
+}
+
+#leaderboardList .list-group-item:nth-child(3) {
+  background: #fff2e8;
+}
+
+/* =====================================================
+   PREMIUM TITLE
+===================================================== */
+
+#premiumCard > h2 {
+  text-align: center;
+
+  margin-bottom: 25px;
+
+  color: white;
+
+  font-size: 30px;
+
+  font-weight: 700;
+}
+
+/* =====================================================
+   ANIMATIONS
+===================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 992px) {
+  .premium-card,
+  .premium-success-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .premium-card {
+    padding: 25px;
+  }
+
+  .premium-success-card {
+    padding: 25px;
+  }
+
+  .premium-badge {
+    width: 90px;
+
+    height: 90px;
+
+    font-size: 42px;
+  }
 }

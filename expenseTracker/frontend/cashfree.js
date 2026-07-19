@@ -1,10 +1,21 @@
 const BASE_URL = "http://localhost:3000/users";
 const premiumBtn = document.getElementById("buyPremiumBtn");
-const logoutBtn = document.getElementById("logoutBtn");
+// const logoutBtn = document.getElementById("logoutBtn");
 
-const submitBtn = document.getElementById("submitBtn");
+// const submitBtn = document.getElementById("submitBtn");
 premiumBtn.addEventListener("click", buyPremium);
 
+
+const cashfree = Cashfree({
+  mode: "sandbox",
+});
+
+
+// const token = localStorage.getItem("token");
+
+// if (!token) {
+//   window.location.href = "login.html";
+// }
 
 async function buyPremium() {
   try {

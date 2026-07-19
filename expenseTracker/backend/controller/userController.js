@@ -51,7 +51,7 @@ async function loginUser(req, res) {
 
 const getProfile = (req, res) => {
   const user = req.user;
-  if(!user){
+  if (!user) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
@@ -64,4 +64,11 @@ const getProfile = (req, res) => {
   });
 };
 
-module.exports = { createUser, getAllUsers, loginUser, getProfile };
+
+module.exports = {
+  createUser,
+  getAllUsers,
+  loginUser,
+  getProfile,
+ 
+};

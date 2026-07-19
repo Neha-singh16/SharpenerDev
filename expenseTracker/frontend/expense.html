@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Expense Dashboard</title>
 
     <link
@@ -14,141 +15,151 @@
   </head>
 
   <body>
-    <div id="premiumSection">
-      <!-- <button id="buyPremiumBtn">Buy Premium Membership</button> -->
-      <div class="premium-container" id="premiumContainer">
-        <div class="premium-card">
-          <h2>⭐ Premium Membership</h2>
+    <div class="dashboard">
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar">
+        <div class="logo">💰 Expense Tracker</div>
 
-          <p>Unlock premium features</p>
+        <div id="premiumSection">
+          <!-- BUY PREMIUM CARD -->
 
-          <ul>
-            <li>🏆 Leaderboard</li>
-            <li>📥 Download Expenses</li>
-            <li>👑 Premium Badge</li>
-          </ul>
+          <div id="buyPremiumCard" style="display: none">
+            <div class="premium-card">
+              <h2>⭐ Upgrade to Premium</h2>
 
-          <button id="buyPremiumBtn">Buy Premium - ₹499</button>
-        </div>
-        <div id="premiumCard" style="display: none">
-          Premium User UI
+              <p>
+                Unlock powerful features to manage your expenses like a pro.
+              </p>
 
-          <div class="premium-container">
+              <ul>
+                <li>🏆 Expense Leaderboard</li>
+
+                <li>📥 Download Expenses</li>
+
+                <li>📊 Advanced Reports</li>
+
+                <li>👑 Premium Badge</li>
+              </ul>
+
+              <button id="buyPremiumBtn">Buy Premium - ₹499</button>
+            </div>
+          </div>
+
+          <!-- PREMIUM USER -->
+
+          <div id="premiumCard" style="display: none">
             <div class="premium-success-card">
               <div class="premium-badge">👑</div>
 
               <h2>Premium Member</h2>
 
-              <p>Welcome! Your Premium Membership is active.</p>
+              <p>Your Premium Membership is Active</p>
 
               <div class="premium-status">
                 <span class="status-dot"></span>
+
                 Active
               </div>
 
-              <hr />
-
               <div class="premium-features">
-                <div class="feature">
-                  🏆
-                  <span>Leaderboard Access</span>
-                </div>
+                <div class="feature">🏆 <span>Leaderboard Access</span></div>
 
-                <div class="feature">
-                  📥
-                  <span>Download Expenses</span>
-                </div>
+                <div class="feature">📥 <span>Download Expenses</span></div>
 
-                <div class="feature">
-                  📊
-                  <span>Advanced Reports</span>
-                </div>
+                <div class="feature">📊 <span>Advanced Reports</span></div>
 
-                <div class="feature">
-                  💎
-                  <span>Premium Badge</span>
-                </div>
+                <div class="feature">💎 <span>Premium Badge</span></div>
+              </div>
+
+              <button id="leaderboardBtn">🏆 Show Leaderboard</button>
+
+              <div id="leaderboardContainer" style="display: none">
+                <h3>🏆 Expense Leaderboard</h3>
+
+                <ul id="leaderboardList" class="list-group"></ul>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="container mt-5">
-      <div class="card shadow-lg">
-        <div
-          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
-        >
-          <h3 class="mb-0">Expense Tracker</h3>
+      </aside>
 
-          <button id="logoutBtn" class="btn btn-light">Logout</button>
+      <!-- RIGHT PANEL -->
+
+      <main class="main-content">
+        <div class="card">
+          <div class="card-header">
+            <h2>Expense Dashboard</h2>
+
+            <button id="logoutBtn" class="btn btn-light">Logout</button>
+          </div>
+
+          <div class="card-body">
+            <form id="expenseForm">
+              <div class="mb-3">
+                <label>Amount</label>
+
+                <input
+                  type="number"
+                  id="amount"
+                  class="form-control"
+                  placeholder="Enter Amount"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label>Description</label>
+
+                <input
+                  type="text"
+                  id="description"
+                  class="form-control"
+                  placeholder="Enter Description"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label>Category</label>
+
+                <select id="category" class="form-select" required>
+                  <option value="">Select Category</option>
+
+                  <option>Food</option>
+
+                  <option>Petrol</option>
+
+                  <option>Salary</option>
+
+                  <option>Movie</option>
+
+                  <option>Shopping</option>
+
+                  <option>Travel</option>
+
+                  <option>Others</option>
+                </select>
+              </div>
+
+              <button id="submitBtn" class="btn btn-primary w-100">
+                Add Expense
+              </button>
+            </form>
+
+            <hr />
+
+            <h3>Your Expenses</h3>
+
+            <ul id="expenseList" class="list-group mt-4"></ul>
+          </div>
         </div>
-
-        <div class="card-body">
-          <form id="expenseForm">
-            <div class="mb-3">
-              <label class="form-label"> Amount </label>
-
-              <input
-                type="number"
-                id="amount"
-                class="form-control"
-                placeholder="Enter Amount"
-                required
-              />
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"> Description </label>
-
-              <input
-                type="text"
-                id="description"
-                class="form-control"
-                placeholder="Enter Description"
-                required
-              />
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label"> Category </label>
-
-              <select id="category" class="form-select" required>
-                <option value="">Select Category</option>
-
-                <option value="Food">Food</option>
-
-                <option value="Petrol">Petrol</option>
-
-                <option value="Salary">Salary</option>
-
-                <option value="Movie">Movie</option>
-
-                <option value="Shopping">Shopping</option>
-
-                <option value="Travel">Travel</option>
-
-                <option value="Others">Others</option>
-              </select>
-            </div>
-
-            <button id="submitBtn" class="btn btn-primary w-100">
-              Add Expense
-            </button>
-          </form>
-
-          <hr />
-
-          <h4>Your Expenses</h4>
-
-          <ul id="expenseList" class="list-group mt-3"></ul>
-        </div>
-      </div>
+      </main>
     </div>
+
     <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+    <script src="cashfree.js"></script>
     <script src="expense.js"></script>
   </body>
 </html>
