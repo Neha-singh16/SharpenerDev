@@ -38,6 +38,12 @@ window.addEventListener("DOMContentLoaded", async () => {
   } catch (err) {
     console.log("Premium Error", err);
   }
+
+   try {
+    await showLeaderboard();
+  } catch (err) {
+    console.log("LeaderBoard error!!", err);
+  }
 });
 
 form.addEventListener("submit", addExpense);
