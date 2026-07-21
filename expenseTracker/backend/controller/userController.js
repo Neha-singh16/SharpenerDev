@@ -1,15 +1,31 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 
+const { sendWelcomeEmail } = require("../services/emailServices");
+
 const generateToken = require("../utils/generateToken");
 async function createUser(req, res) {
   try {
+    console.log("Controller reached");
     const { name, email, password } = req.body;
+    console.log(req.body);
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email, password: hashedPassword });
+    console.log("User created");
+
+    await sendWelcomeEmail(user.email, user.name);
     res.status(201).json({ message: "User created sucessfully", user });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.log("ERROR:");
+    console.log(err);
+
+    if (err.name === "SequelizeUniqueConstraintError") {
+      return res.status(409).json({ error: "User already exists" });
+    }
+
+    res.status(500).json({
+      error: err.message,
+    });
   }
 }
 
@@ -70,5 +86,5 @@ module.exports = {
   getAllUsers,
   loginUser,
   getProfile,
- 
+
 };

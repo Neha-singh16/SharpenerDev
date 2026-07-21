@@ -10,11 +10,6 @@ if (signupform) {
     signupform.addEventListener("submit", signupUser);
 }
 
-// if (loginForm) {
-//     loginForm.addEventListener("submit", loginUser);
-// }
-// window.addEventListener("DOMContentLoaded", loadUsers);
-
 async function signupUser(e) {
   e.preventDefault();
 
