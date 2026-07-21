@@ -39,10 +39,11 @@ async function sendWelcomeEmail(toEmail, name) {
   }
 }
 
-async function sendForgotPasswordEmail(toEmail, name) {
+async function sendForgotPasswordEmail(toEmail, name, token) {
 //   console.log("Sending forgot password email to:", toEmail);
+const resetLink =`http://localhost:3000/users/password/resetpassword/${token}`;
   const email = {
-    subject: "Password Reset",
+    subject: "Reset your password!",
 
     sender: {
       name: "Expense Tracker",
@@ -56,28 +57,40 @@ async function sendForgotPasswordEmail(toEmail, name) {
       },
     ],
 
-    htmlContent: `
+            htmlContent: `
+            <h2>Hello ${name},</h2>
 
-        <h2>Hello ${name},</h2>
+            <p>We received a request to reset your password.</p>
 
-        <p>We received a request to reset your password.</p>
+            <p>
+                Click the button below to reset your password.
+            </p>
 
-        <p>
-            If you did not request this,
-            simply ignore this email.
-        </p>
+            <a
+                href="${resetLink}"
+                style="
+                    background:#007bff;
+                    color:white;
+                    padding:10px 20px;
+                    text-decoration:none;
+                    border-radius:5px;
+                    display:inline-block;
+                "
+            >
+                Reset Password
+            </a>
 
-        <br>
+            <br><br>
 
-        <p>
-            This is a dummy reset email for now.
-        </p>
+            <p>
+                If you did not request this, you can safely ignore this email.
+            </p>
 
-        <br>
+            <br>
 
-        <b>Expense Tracker Team</b>
-
+            <p>Expense Tracker Team</p>
         `,
+
   };
 
   const response =

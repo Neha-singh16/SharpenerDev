@@ -13,6 +13,7 @@ const purchaseRouter = require("../router/purchaseRouter");
 const passwordRouter = require("../router/passwordRouter");
 
 
+
 require("../models/index"); // Import associations so Sequelize registers the foreign keys
 
 require("dotenv").config();
