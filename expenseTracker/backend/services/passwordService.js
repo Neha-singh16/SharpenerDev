@@ -5,7 +5,6 @@ const bcrypt=require("bcrypt");
 const { v4: uuid } = require("uuid");
 
 async function forgotPasswordService(email) {
-//   const { email } = req.body;
   const user = await User.findOne({ where: { email: email } });
   if (!user) {
     throw new Error("User not found");
@@ -26,7 +25,11 @@ async function forgotPasswordService(email) {
 }
 
 async function updatePasswordService(token, password){
-    const request = await ForgotPassword.findOne({where: {id: token , active: true}, include: User});
+    const request = await ForgotPassword.findOne({where: {id: token , active: true},    include: [
+        {
+            model: User
+        }
+    ]});
     if(!request){
         throw new Error("Invalid Token");
     }

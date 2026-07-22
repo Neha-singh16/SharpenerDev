@@ -8,8 +8,8 @@ async function forgotPassword(req,res){
        res.status(200).json(result);
 
     }catch(err){
-         res.status(404).json({
-      message: err.message,
+       res.status(500).json({
+    message: err.message
     });
     }
 }
@@ -17,7 +17,7 @@ async function forgotPassword(req,res){
 async function resetPassword(req, res) {
   try {
     const token = req.params.token;
-    const { email } = req.body;
+    // const { email } = req.body;
     const forgotPasswordEntry = await ForgotPassword.findOne({
       where: { id: token, active: true },
     });
@@ -32,7 +32,7 @@ async function resetPassword(req, res) {
 
     <body>
 
-        <form action="/password/updatepassword/${token}" method="POST">
+        <form action="/users/password/updatepassword/${token}" method="POST">
 
             <input
                 type="password"
@@ -60,7 +60,7 @@ async function resetPassword(req, res) {
   }
 }
 
-async function updatePassword(res, res) {
+async function updatePassword(req, res) {
   const token = req.params.token;
   const { password } = req.body;
   await updatePasswordService(token, password);

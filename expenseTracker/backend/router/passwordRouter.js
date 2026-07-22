@@ -5,6 +5,6 @@ const {forgotPassword, resetPassword, updatePassword } = require("../controller/
 // const {forgotPasswordService} = require("../services/passwordService")
 
 router.post("/forgotpassword", forgotPassword);
-router.post("/resetpassword/:token", resetPassword);
+router.get("/resetpassword/:token", resetPassword);
 router.post("/updatepassword/:token", updatePassword);
 module.exports = router;

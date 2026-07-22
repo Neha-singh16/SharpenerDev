@@ -18,7 +18,7 @@ require("../models/index"); // Import associations so Sequelize registers the fo
 
 require("dotenv").config();
 
-
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
