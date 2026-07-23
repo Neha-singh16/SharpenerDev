@@ -1,6 +1,7 @@
 const Expense = require("../models/expenseModel");
 const bcrypt = require("bcrypt");
 const sequelize = require("../utils/db");
+const { getExpenses } = require("../services/ExpenseServices");
 const { suggestCategory } = require("../services/geminiServices");
 
 const generateToken = require("../utils/generateToken");
@@ -61,14 +62,29 @@ async function addExpense(req, res) {
 
 async function getAllExpenses(req, res) {
   try {
-    const userId = req.user.id;
-    console.log(userId);
-    const expense = await Expense.findAll({ where: { UserId: userId } });
-    console.log(expense);
+    // const userId = req.user.id;
+    // console.log(userId);
+    // const expense = await Expense.findAll({ where: { UserId: userId } });
+    // console.log(expense);
+    const page = parseInt(req.query.page) || 1;
+    const allowedLimits = [5, 10, 20, 40];
+    let ITEMS_PER_PAGE = parseInt(req.query.limit) || 10;
+    if (!allowedLimits.includes(ITEMS_PER_PAGE)) {
+      ITEMS_PER_PAGE = 10;
+    }
+    const result = await getExpenses(req.user.id, page, ITEMS_PER_PAGE);
 
-    res.status(201).json({ message: "expense fetched successfully", expense });
+    res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching expenses", err });
+    console.error(err);
+
+    res.status(500).json({
+      message: "Error fetching expenses",
+
+      error: err.message,
+
+      stack: err.stack,
+    });
   }
 }
 

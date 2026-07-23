@@ -79,64 +79,81 @@
               <h3>Add Expense</h3>
 
               <form id="expenseForm">
-              <div class="mb-3">
-                <label class="form-label">Amount</label>
+                <div class="mb-3">
+                  <label class="form-label">Amount</label>
 
-                <input
-                  type="number"
-                  id="amount"
-                  class="form-control"
-                  placeholder="Enter Amount"
-                  required
-                />
-              </div>
+                  <input
+                    type="number"
+                    id="amount"
+                    class="form-control"
+                    placeholder="Enter Amount"
+                    required
+                  />
+                </div>
 
-              <div class="mb-3">
-                <label class="form-label">Description</label>
+                <div class="mb-3">
+                  <label class="form-label">Description</label>
 
-                <input
-                  type="text"
-                  id="description"
-                  class="form-control"
-                  placeholder="Enter Description"
-                  required
-                />
-              </div>
+                  <input
+                    type="text"
+                    id="description"
+                    class="form-control"
+                    placeholder="Enter Description"
+                    required
+                  />
+                </div>
 
-              <div class="mb-3">
-                <label class="form-label">Category</label>
+                <div class="mb-3">
+                  <label class="form-label">Category</label>
 
-                <select id="category" class="form-select" required>
-                  <option value="">Select Category</option>
+                  <select id="category" class="form-select" required>
+                    <option value="">Select Category</option>
 
-                  <option>Food</option>
+                    <option>Food</option>
 
-                  <option>Petrol</option>
+                    <option>Petrol</option>
 
-                  <option>Salary</option>
+                    <option>Salary</option>
 
-                  <option>Movie</option>
+                    <option>Movie</option>
 
-                  <option>Shopping</option>
+                    <option>Shopping</option>
 
-                  <option>Travel</option>
+                    <option>Travel</option>
 
-                  <option>Others</option>
-                </select>
-              </div>
+                    <option>Others</option>
+                  </select>
+                </div>
 
-              <button id="submitBtn" class="btn btn-primary w-100">
-                Add Expense
-              </button>
-            </form>
+                <button id="submitBtn" class="btn btn-primary w-100">
+                  Add Expense
+                </button>
+              </form>
             </section>
 
             <hr />
 
             <section class="dashboard-section">
               <h3>Your Expenses</h3>
+              <div class="mb-3">
+                <label> Show </label>
+
+                <select id="itemsPerPage">
+                  <option value="5">5</option>
+
+                  <option value="10">10</option>
+
+                  <option value="20">20</option>
+
+                  <option value="40">40</option>
+                </select>
+                <label> expenses per page </label>
+              </div>
               <ul id="expenseList" class="list-group mt-4"></ul>
-              <div id="pagination" class="d-flex justify-content-center mt-4"></div>
+              <div
+                id="pagination"
+                class="d-flex justify-content-center mt-4"
+              ></div>
             </section>
 
             <div id="leaderboardSection" style="display: none">

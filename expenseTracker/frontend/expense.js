@@ -17,6 +17,7 @@ const reportTableBody = document.getElementById("reportTableBody");
 const downloadReportBtn = document.getElementById("downloadReportBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const pagination = document.getElementById("pagination");
+const itemsPerPage = document.getElementById("itemsPerPage");
 
 let editExpenseId = null;
 let allExpenses = [];
@@ -24,6 +25,13 @@ let filteredReportExpenses = [];
 let leaderboardLoaded = false;
 let isPremiumUser = false;
 let currentPage = 1;
+let ITEMS_PER_PAGE = Number(localStorage.getItem("itemsPerPage")) || 10;
+
+itemsPerPage.addEventListener("change", () => {
+  ITEMS_PER_PAGE = Number(itemsPerPage.value);
+  localStorage.setItem("itemsPerPage", ITEMS_PER_PAGE);
+  loadExpenses(currentPage);
+});
 
 const token = localStorage.getItem("token");
 
@@ -33,6 +41,7 @@ if (!token) {
 
 window.addEventListener("DOMContentLoaded", async () => {
   try {
+    itemsPerPage.value = ITEMS_PER_PAGE;
     await loadExpenses();
     await checkPremiumStatus();
   } catch (err) {
@@ -52,13 +61,13 @@ logoutBtn.addEventListener("click", () => {
 async function loadExpenses(page) {
 try{
   currentPage = page || 1;
-    const res = await axios.get(`${BASE_URL}/expenses?page=${page}`, {
+    const res = await axios.get(`${BASE_URL}/expenses?page=${currentPage}&limit=${ITEMS_PER_PAGE}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
-  allExpenses = res.data.expense;
+  allExpenses = res.data.expenses;
   expenseList.innerHTML = "";
 
   allExpenses.forEach((exp) => {
@@ -82,25 +91,27 @@ function showPagination(data){
   pagination.innerHTML = "";
 
   if(data.hasPreviousPage){
-    const prevBtn = document.createElement("button");
+    let prevBtn = document.createElement("button");
     prevBtn.className = "btn btn-secondary mx-1";
     prevBtn.innerText = "Previous";
-    prevBtn.onclick = () => loadExpenses(data.hasPreviousPage);
+    // prevBtn.onclick = () => loadExpenses(data.hasPreviousPage);
+    prevBtn.onclick = () => loadExpenses(data.previousPage);
     pagination.appendChild(prevBtn);
   }
 
 
-   const currentBtn = document.createElement("button");
+   let currentBtn = document.createElement("button");
    currentBtn.innerText = data.currentPage;
      currentBtn.classList.add("active");
 
   pagination.appendChild(currentBtn);
 
   if(data.hasNextPage){
-    const nextBtn =  document.createElement("button");
+    let nextBtn =  document.createElement("button");
     nextBtn.className = "btn btn-secondary mx-1";
     nextBtn.innerText = "Next";
-    nextBtn.onclick = () => loadExpenses(data.hasNextPage);
+    // nextBtn.onclick = () => loadExpenses(data.hasNextPage);
+    nextBtn.onclick = () => loadExpenses(data.nextPage);
     pagination.appendChild(nextBtn);
   }
 
