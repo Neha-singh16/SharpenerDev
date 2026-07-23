@@ -124,6 +124,7 @@ async function addExpense(e) {
     amount: amount.value,
     description: description.value,
     category: category.value,
+    note: note.value,
   };
 
   try {
@@ -329,6 +330,7 @@ function displayExpense(expense) {
       ${expense.description}
       <br>
       <small>${expense.category}</small>
+       <small>${expense.note}</small>
       ${
         expense.createdAt
           ? `<br><small class="text-muted">${formatDate(expense.createdAt)}</small>`
@@ -374,6 +376,7 @@ function editExpense(expense) {
   amount.value = expense.amount;
   description.value = expense.description;
   category.value = expense.category;
+  note.value = expense.note;
   editExpenseId = expense.id;
   submitBtn.innerHTML = "Update Expense";
 }

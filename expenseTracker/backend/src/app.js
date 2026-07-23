@@ -30,7 +30,7 @@ app.use("/users/password", passwordRouter);
 app.use(notFound);
 app.use(errorHandler);
 
-db.sync().then(()=> {
+db.authenticate().then(()=> {
     app.listen(3000, () => {
     console.log("Server is running on port 3000");
 })
