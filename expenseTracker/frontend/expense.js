@@ -16,12 +16,14 @@ const reportAverage = document.getElementById("reportAverage");
 const reportTableBody = document.getElementById("reportTableBody");
 const downloadReportBtn = document.getElementById("downloadReportBtn");
 const logoutBtn = document.getElementById("logoutBtn");
+const pagination = document.getElementById("pagination");
 
 let editExpenseId = null;
 let allExpenses = [];
 let filteredReportExpenses = [];
 let leaderboardLoaded = false;
 let isPremiumUser = false;
+let currentPage = 1;
 
 const token = localStorage.getItem("token");
 
@@ -47,8 +49,10 @@ logoutBtn.addEventListener("click", () => {
   window.location.href = "login.html";
 });
 
-async function loadExpenses() {
-  const res = await axios.get(`${BASE_URL}/expenses`, {
+async function loadExpenses(page) {
+try{
+  currentPage = page || 1;
+    const res = await axios.get(`${BASE_URL}/expenses?page=${page}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -61,9 +65,45 @@ async function loadExpenses() {
     displayExpense(exp);
   });
 
+    showPagination(res.data);
   if (isPremiumUser) {
     updateReport();
   }
+
+
+
+}catch(err){
+  console.log(err);
+}
+}
+
+function showPagination(data){
+  console.log(data);
+  pagination.innerHTML = "";
+
+  if(data.hasPreviousPage){
+    const prevBtn = document.createElement("button");
+    prevBtn.className = "btn btn-secondary mx-1";
+    prevBtn.innerText = "Previous";
+    prevBtn.onclick = () => loadExpenses(data.hasPreviousPage);
+    pagination.appendChild(prevBtn);
+  }
+
+
+   const currentBtn = document.createElement("button");
+   currentBtn.innerText = data.currentPage;
+     currentBtn.classList.add("active");
+
+  pagination.appendChild(currentBtn);
+
+  if(data.hasNextPage){
+    const nextBtn =  document.createElement("button");
+    nextBtn.className = "btn btn-secondary mx-1";
+    nextBtn.innerText = "Next";
+    nextBtn.onclick = () => loadExpenses(data.hasNextPage);
+    pagination.appendChild(nextBtn);
+  }
+
 }
 
 async function addExpense(e) {
@@ -93,7 +133,8 @@ async function addExpense(e) {
     }
 
     form.reset();
-    await loadExpenses();
+    // await loadExpenses();
+    await loadExpenses(currentPage);
   } catch (err) {
     console.log(err);
   }
@@ -311,7 +352,8 @@ async function deleteExpense(expenseId) {
       },
     });
 
-    await loadExpenses();
+    // await loadExpenses();
+    await loadExpenses(currentPage);
   } catch (err) {
     console.log(err);
   }
