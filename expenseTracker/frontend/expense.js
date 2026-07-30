@@ -18,6 +18,7 @@ const downloadReportBtn = document.getElementById("downloadReportBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const pagination = document.getElementById("pagination");
 const itemsPerPage = document.getElementById("itemsPerPage");
+// const BASE_URL = "http://13.201.130.108:3000/users";
 
 let editExpenseId = null;
 let allExpenses = [];
@@ -35,12 +36,18 @@ itemsPerPage.addEventListener("change", () => {
 
 const token = localStorage.getItem("token");
 
-if (!token) {
-  window.location.href = "login.html";
-}
+// if (!token) {
+//   window.location.href = "login.html";
+// }
 
 window.addEventListener("DOMContentLoaded", async () => {
   try {
+    // const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.replace("login.html");
+      return;
+    }
     itemsPerPage.value = ITEMS_PER_PAGE;
     await loadExpenses();
     await checkPremiumStatus();
@@ -59,38 +66,38 @@ logoutBtn.addEventListener("click", () => {
 });
 
 async function loadExpenses(page) {
-try{
-  currentPage = page || 1;
-    const res = await axios.get(`${BASE_URL}/expenses?page=${currentPage}&limit=${ITEMS_PER_PAGE}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    currentPage = page || 1;
+    const res = await axios.get(
+      `${BASE_URL}/expenses?page=${currentPage}&limit=${ITEMS_PER_PAGE}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
-  allExpenses = res.data.expenses;
-  expenseList.innerHTML = "";
+    allExpenses = res.data.expenses;
+    expenseList.innerHTML = "";
 
-  allExpenses.forEach((exp) => {
-    displayExpense(exp);
-  });
+    allExpenses.forEach((exp) => {
+      displayExpense(exp);
+    });
 
     showPagination(res.data);
-  if (isPremiumUser) {
-    updateReport();
+    if (isPremiumUser) {
+      updateReport();
+    }
+  } catch (err) {
+    console.log(err);
   }
-
-
-
-}catch(err){
-  console.log(err);
-}
 }
 
-function showPagination(data){
+function showPagination(data) {
   console.log(data);
   pagination.innerHTML = "";
 
-  if(data.hasPreviousPage){
+  if (data.hasPreviousPage) {
     let prevBtn = document.createElement("button");
     prevBtn.className = "btn btn-secondary mx-1";
     prevBtn.innerText = "Previous";
@@ -99,22 +106,20 @@ function showPagination(data){
     pagination.appendChild(prevBtn);
   }
 
-
-   let currentBtn = document.createElement("button");
-   currentBtn.innerText = data.currentPage;
-     currentBtn.classList.add("active");
+  let currentBtn = document.createElement("button");
+  currentBtn.innerText = data.currentPage;
+  currentBtn.classList.add("active");
 
   pagination.appendChild(currentBtn);
 
-  if(data.hasNextPage){
-    let nextBtn =  document.createElement("button");
+  if (data.hasNextPage) {
+    let nextBtn = document.createElement("button");
     nextBtn.className = "btn btn-secondary mx-1";
     nextBtn.innerText = "Next";
     // nextBtn.onclick = () => loadExpenses(data.hasNextPage);
     nextBtn.onclick = () => loadExpenses(data.nextPage);
     pagination.appendChild(nextBtn);
   }
-
 }
 
 async function addExpense(e) {
@@ -292,31 +297,54 @@ function updateReport() {
   });
 }
 
-function downloadReport() {
-  if (!filteredReportExpenses.length) {
-    alert("No expenses to download for the selected period.");
-    return;
+// function downloadReport() {
+//   if (!filteredReportExpenses.length) {
+//     alert("No expenses to download for the selected period.");
+//     return;
+//   }
+
+//   const filter = reportFilter.value;
+//   const headers = ["Date", "Description", "Category", "Amount"];
+//   const rows = filteredReportExpenses.map((expense) => [
+//     formatDate(expense.createdAt),
+//     expense.description,
+//     expense.category,
+//     expense.amount,
+//   ]);
+
+//   const csvContent = [headers, ...rows]
+//     .map((row) => row.map((cell) => `"${cell}"`).join(","))
+//     .join("\n");
+
+//   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+//   const link = document.createElement("a");
+//   link.href = URL.createObjectURL(blob);
+//   link.download = `expense-report-${filter.toLowerCase()}.csv`;
+//   link.click();
+//   URL.revokeObjectURL(link.href);
+// }
+
+async function downloadReport() {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.get(
+      `${BASE_URL}/download`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    // window.open(res.data.fileURL);
+    window.open(res.data.fileURL, "_blank");
+  } catch (err) {
+    console.log(err);
+
+    alert("Download failed");
   }
-
-  const filter = reportFilter.value;
-  const headers = ["Date", "Description", "Category", "Amount"];
-  const rows = filteredReportExpenses.map((expense) => [
-    formatDate(expense.createdAt),
-    expense.description,
-    expense.category,
-    expense.amount,
-  ]);
-
-  const csvContent = [headers, ...rows]
-    .map((row) => row.map((cell) => `"${cell}"`).join(","))
-    .join("\n");
-
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = `expense-report-${filter.toLowerCase()}.csv`;
-  link.click();
-  URL.revokeObjectURL(link.href);
 }
 
 function displayExpense(expense) {

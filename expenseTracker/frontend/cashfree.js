@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/users";
+const BASE_URL = "http://13.201.130.108:3000/users";
 const premiumBtn = document.getElementById("buyPremiumBtn");
 // const logoutBtn = document.getElementById("logoutBtn");
 

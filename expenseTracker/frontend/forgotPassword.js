@@ -2,7 +2,7 @@ const form = document.getElementById("forgotPasswordForm");
 
 const message = document.getElementById("message");
 
-const BASE_URL = "http://localhost:3000/users/password";
+const BASE_URL = "http://13.201.130.108:3000/users/password";
 
 form.addEventListener("submit", sendResetEmail);
 

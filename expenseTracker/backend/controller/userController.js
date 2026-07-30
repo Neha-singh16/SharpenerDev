@@ -47,9 +47,9 @@ async function loginUser(req, res) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    console.log("Email from frontend:", email);
-    console.log("Password from frontend:", password);
-    console.log("User from DB:", user);
+    // console.log("Email from frontend:", email);
+    // console.log("Password from frontend:", password);
+    // console.log("User from DB:", user);
 
     const isMatch = await bcrypt.compare(password, user.password);
 
@@ -64,6 +64,7 @@ async function loginUser(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
+
 
 const getProfile = (req, res) => {
   const user = req.user;
@@ -85,6 +86,7 @@ module.exports = {
   createUser,
   getAllUsers,
   loginUser,
+ 
   getProfile,
 
 };

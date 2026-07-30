@@ -37,13 +37,24 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-db.authenticate().then(()=> {
+// db.authenticate().then(()=> {
+//     app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+// })
+
+// }).catch((err) => {
+// console.log(err);
+// })
+
+
+db.sync()
+.then(() => {
+    console.log("Database synced successfully.");
+
     app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+        console.log(`Server is running on port ${PORT}`);
+    });
 })
-
-}).catch((err) => {
-console.log(err);
-})
-
-
+.catch((err) => {
+    console.log(err);
+});

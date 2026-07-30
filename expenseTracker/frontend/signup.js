@@ -4,7 +4,8 @@ const list = document.getElementById('usersList');
 
 const msg = document.getElementById("message");
 
-const BASE_URL = "http://localhost:3000/users";
+// const BASE_URL = "http://localhost:3000/users";
+const BASE_URL = "http://13.201.130.108:3000/users";
 
 if (signupform) {
     signupform.addEventListener("submit", signupUser);
