@@ -45,6 +45,7 @@ const PORT = process.env.PORT || 3000;
 // }).catch((err) => {
 // console.log(err);
 // })
+console.log("Registered models:", Object.keys(db.models));
 
 
 db.sync()
