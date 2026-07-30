@@ -17,7 +17,7 @@ const downloadRouter = require("../router/downloadRouter");
 
 
 require("../models/index"); // Import associations so Sequelize registers the foreign keys
-
+console.log("Registered Models:", Object.keys(db.models));
 require("dotenv").config();
 
 app.use(express.urlencoded({ extended: true }));

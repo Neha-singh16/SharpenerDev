@@ -2,9 +2,14 @@ const {Sequelize} = require('sequelize');
 
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
   host: process.env.DB_HOST,
-  dialect: 'mysql'
+  dialect: 'mysql',
+  logging: console.log
 });
 
+
+console.log("HOST:", process.env.DB_HOST);
+console.log("DATABASE:", process.env.DB_NAME);
+console.log("USER:", process.env.DB_USER);
 
 console.log("Database:", sequelize.config.database);
 (async () => {
