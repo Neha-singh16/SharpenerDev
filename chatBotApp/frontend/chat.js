@@ -1,5 +1,5 @@
 const BASE_URL = "http://localhost:3000/chat";
-
+const socket = io("http://localhost:3000");
 const token = localStorage.getItem("token");
 
 const chatForm = document.getElementById("chatForm");
@@ -8,6 +8,10 @@ const chatBody = document.getElementById("chatBody");
 
 // Load old messages when page opens
 window.addEventListener("DOMContentLoaded", loadMessages);
+
+socket.on("receive-message", (chat) => {
+    displayMessage(chat);
+});
 
 // Send message
 chatForm.addEventListener("submit", sendMessage);
