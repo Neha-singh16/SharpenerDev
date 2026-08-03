@@ -6,7 +6,17 @@ async function postMessage(userId , message){
 }
 
 
-// async function getMessages(){
+async function getAllMessages(){
+const chats = await Chat.findAll({include: "User"});
+const formattedChats = chats.map((chat => {
+return {
+    message: chat.message,
+    createdAt: chat.createdAt
+}
 
-// }
-module.exports = {postMessage};
+}
+
+))
+  return formattedChats;
+}
+module.exports = {postMessage, getAllMessages};
