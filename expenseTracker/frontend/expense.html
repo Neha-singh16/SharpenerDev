@@ -103,7 +103,7 @@
                   />
                 </div>
 
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                   <label class="form-label">Category</label>
 
                   <select id="category" class="form-select" required>
@@ -123,13 +123,18 @@
 
                     <option>Others</option>
                   </select>
-                </div>
+                </div> -->
 
                 <div class="mb-3">
                   <label class="form-label">Note</label>
-                  <input type="text" id="note" class="form-control" placeholder="Enter Note" />
+                  <input
+                    type="text"
+                    id="note"
+                    class="form-control"
+                    placeholder="Enter Note"
+                  />
                 </div>
-           
+
                 <button id="submitBtn" class="btn btn-primary w-100">
                   Add Expense
                 </button>
@@ -179,7 +184,7 @@
 
                 <div class="row mt-4">
                   <div class="col-md-4">
-                    <label class="form-label">Report Filter</label>
+                    <!-- <label class="form-label">Report Filter</label>
 
                     <select id="reportFilter" class="form-select">
                       <option value="Daily">Daily</option>
@@ -187,7 +192,19 @@
                       <option value="Weekly">Weekly</option>
 
                       <option value="Monthly">Monthly</option>
+                    </select> -->
+                    <select id="reportFilter" class="form-select">
+                      <option value="Daily">Daily</option>
+                      <option value="Weekly">Weekly</option>
+                      <option value="Monthly">Monthly</option>
+                      <option value="Yearly">Yearly</option>
                     </select>
+
+                    <div id="dynamicFilter" class="mt-3"></div>
+
+                    <button id="applyFilterBtn" class="btn btn-primary mt-3">
+                      Apply Filter
+                    </button>
                   </div>
                 </div>
 

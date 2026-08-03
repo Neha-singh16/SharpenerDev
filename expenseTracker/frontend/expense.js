@@ -18,6 +18,8 @@ const downloadReportBtn = document.getElementById("downloadReportBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const pagination = document.getElementById("pagination");
 const itemsPerPage = document.getElementById("itemsPerPage");
+// const reportFilter = document.getElementById("reportFilter");
+const dynamicFilter = document.getElementById("dynamicFilter");
 // const BASE_URL = "http://13.201.130.108:3000/users";
 
 let editExpenseId = null;
@@ -57,8 +59,16 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
 form.addEventListener("submit", addExpense);
-reportFilter.addEventListener("change", updateReport);
+reportFilter.addEventListener("change", renderFilterInputs);
+
+renderFilterInputs();
+
+// reportFilter.addEventListener("change", updateReport);
+document
+.getElementById("applyFilterBtn")
+.addEventListener("click", updateReport);
 downloadReportBtn.addEventListener("click", downloadReport);
+
 
 logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("token");
@@ -128,7 +138,7 @@ async function addExpense(e) {
   const expense = {
     amount: amount.value,
     description: description.value,
-    category: category.value,
+    // category: category.value,
     note: note.value,
   };
 
@@ -226,28 +236,165 @@ async function showLeaderboard() {
   }
 }
 
-function filterExpensesByPeriod(expenses, filter) {
-  const now = new Date();
 
-  return expenses.filter((expense) => {
-    const expenseDate = new Date(expense.createdAt);
+
+
+
+function renderFilterInputs() {
+
+    const filter = reportFilter.value;
+
+    dynamicFilter.innerHTML = "";
 
     if (filter === "Daily") {
-      return expenseDate.toDateString() === now.toDateString();
+
+        dynamicFilter.innerHTML = `
+            <label>Select Date</label>
+            <input type="date" id="selectedDate" class="form-control">
+        `;
     }
 
-    if (filter === "Weekly") {
-      const weekAgo = new Date(now);
-      weekAgo.setDate(now.getDate() - 7);
-      return expenseDate >= weekAgo && expenseDate <= now;
+    else if (filter === "Weekly") {
+
+        dynamicFilter.innerHTML = `
+            <label>Start Date</label>
+            <input type="date" id="startDate" class="form-control mb-2">
+
+            <label>End Date</label>
+            <input type="date" id="endDate" class="form-control">
+        `;
     }
 
-    return (
-      expenseDate.getMonth() === now.getMonth() &&
-      expenseDate.getFullYear() === now.getFullYear()
-    );
-  });
+    else if (filter === "Monthly") {
+
+        dynamicFilter.innerHTML = `
+            <label>Month</label>
+
+            <select id="selectedMonth" class="form-select mb-2">
+
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7">August</option>
+                <option value="8">September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+
+            </select>
+
+            <label>Year</label>
+
+            <input
+                type="number"
+                id="selectedYear"
+                value="${new Date().getFullYear()}"
+                class="form-control"
+            >
+        `;
+    }
+
+    else if (filter === "Yearly") {
+
+        dynamicFilter.innerHTML = `
+            <label>Year</label>
+
+            <input
+                type="number"
+                id="selectedYear"
+                value="${new Date().getFullYear()}"
+                class="form-control"
+            >
+        `;
+    }
+
 }
+
+function filterExpensesByPeriod(expenses, filter) {
+
+    return expenses.filter((expense) => {
+
+        const expenseDate = new Date(expense.createdAt);
+
+        if (filter === "Daily") {
+
+            const selected = new Date(
+                document.getElementById("selectedDate").value
+            );
+
+            return expenseDate.toDateString() === selected.toDateString();
+        }
+
+        if (filter === "Weekly") {
+
+            const start = new Date(
+                document.getElementById("startDate").value
+            );
+
+            const end = new Date(
+                document.getElementById("endDate").value
+            );
+
+            end.setHours(23,59,59,999);
+
+            return expenseDate >= start && expenseDate <= end;
+        }
+
+        if (filter === "Monthly") {
+
+            const month = Number(
+                document.getElementById("selectedMonth").value
+            );
+
+            const year = Number(
+                document.getElementById("selectedYear").value
+            );
+
+            return expenseDate.getMonth() === month &&
+                   expenseDate.getFullYear() === year;
+        }
+
+        if (filter === "Yearly") {
+
+            const year = Number(
+                document.getElementById("selectedYear").value
+            );
+
+            return expenseDate.getFullYear() === year;
+        }
+
+        return true;
+
+    });
+
+}
+
+// function filterExpensesByPeriod(expenses, filter) {
+//   const now = new Date();
+
+//   return expenses.filter((expense) => {
+//     const expenseDate = new Date(expense.createdAt);
+
+//     if (filter === "Daily") {
+//       return expenseDate.toDateString() === now.toDateString();
+//     }
+
+//     if (filter === "Weekly") {
+//       const weekAgo = new Date(now);
+//       weekAgo.setDate(now.getDate() - 7);
+//       return expenseDate >= weekAgo && expenseDate <= now;
+//     }
+
+//     return (
+//       expenseDate.getMonth() === now.getMonth() &&
+//       expenseDate.getFullYear() === now.getFullYear()
+//     );
+//   });
+// }
 
 function formatDate(dateString) {
   return new Date(dateString).toLocaleDateString("en-IN", {

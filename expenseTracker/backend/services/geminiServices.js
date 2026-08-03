@@ -4,7 +4,7 @@ const genAI = new GoogleGenerativeAI(
 );
 
 const model = genAI.getGenerativeModel({
-model: "gemini-2.0-flash"
+model: "gemini-2.5-flash"
 });
 
 async function suggestCategory(description) {
@@ -28,6 +28,7 @@ Return ONLY the category name.
     throw error;
   }
 }
+
 
 
 module.exports = {
