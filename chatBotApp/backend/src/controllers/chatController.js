@@ -5,9 +5,13 @@ async function postMessage(req, res) {
   try {
     const io = req.app.get("io");
     const { message } = req.body;
-    const chat = await chatService.postMessage(req.user.id, message);
+    // const chat = await chatService.postMessage(req.user.id, message);
+    const chat = await chatService.postMessage(
+    socket.user.id,
+    message
+);
     // io.emit("receive-message", chat);
-    io.emit("receive-message", {
+    io.to(roomId).emit("receive-message", {
    userId: chat.user.id,
     username: chat.user.username,
     message: chat.message,

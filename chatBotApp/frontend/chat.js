@@ -4,6 +4,9 @@ const BASE_URL = "http://localhost:3000/chat";
 const token = localStorage.getItem("token");
 const payload = JSON.parse(atob(token.split(".")[1]));
 const currentUserId = payload.userId;
+let roomId = "";
+let selectedUserId = null;
+
 console.log(currentUserId);
 const socket = io("http://localhost:3000", {
   auth: {
@@ -17,6 +20,20 @@ const chatBody = document.getElementById("chatBody");
 
 // Load old messages when page opens
 window.addEventListener("DOMContentLoaded", loadMessages);
+const roomId = createRoom(currentUserId, selectedUserId);
+
+function createRoom(id1, id2) {
+  return [id1, id2].sort().join("_");
+}
+
+function openChat(userId){
+    selectedUserId = userId;
+
+    roomId = createRoom(currentUserId,userId);
+
+    socket.emit("join-room",roomId);
+
+}
 
 socket.on("receive-message", (object) => {
   displayMessage(object);
@@ -33,16 +50,21 @@ async function sendMessage(e) {
   if (!message) return;
 
   try {
-    const res = await axios.post(
-      `${BASE_URL}/post-message`,
-      { message },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    // const res = await axios.post(
+    //   `${BASE_URL}/post-message`,
+    //   { message },
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   },
+    // );
 
+    socket.emit("new-message", {
+      roomId,
+
+      message,
+    });
     // // Show message instantly
     // displayMessage({
     //     message,
@@ -80,23 +102,17 @@ async function loadMessages() {
 }
 
 function displayMessage(chat) {
+  const time = new Date(chat.createdAt).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-    const time = new Date(chat.createdAt).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-    });
+  const messageType = chat.userId === currentUserId ? "sent" : "received";
 
-    const messageType =
-        chat.userId === currentUserId
-            ? "sent"
-            : "received";
+  const name =
+    messageType === "received" ? `<strong>${chat.username}</strong><br>` : "";
 
-    const name =
-        messageType === "received"
-            ? `<strong>${chat.username}</strong><br>`
-            : "";
-
-    chatBody.innerHTML += `
+  chatBody.innerHTML += `
 
         <div class="message ${messageType}">
 
@@ -114,5 +130,5 @@ function displayMessage(chat) {
 
     `;
 
-    chatBody.scrollTop = chatBody.scrollHeight;
+  chatBody.scrollTop = chatBody.scrollHeight;
 }
