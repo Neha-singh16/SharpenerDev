@@ -1,23 +1,30 @@
-const {DataTypes} = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../database/db-connection");
 
-const Chat = sequelize.define("Chat", {
+const Chat = sequelize.define(
+  "Chat",
+  {
     id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
     },
     userId: {
-        type: DataTypes.INTEGER,
-      allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
-   message:{
-    type: DataTypes.STRING,
-    allowNull: false
-    }
-}, {
-    timestamps: true
-}
-)
+    roomId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    message: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
 module.exports = Chat;

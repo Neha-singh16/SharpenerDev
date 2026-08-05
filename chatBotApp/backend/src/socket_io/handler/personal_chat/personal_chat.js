@@ -2,11 +2,11 @@ const chatService = require("../../../services/chatService");
 
 module.exports = (socket , io) => {
   console.log(socket.user.username, "connected");
-  socket.on("join-room", (roomId) => {
-    socket.join(roomId);
-    console.log(socket.user.username, "joined", roomId);
-  });
+  socket.on("join-room",(roomId)=>{
 
+    socket.join(roomId);
+
+});
 
   socket.on("new-message", async ({ roomId, message }) => {
     console.log({ roomId, message });

@@ -1,50 +1,77 @@
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
 
+async function postMessage(userId, roomId, message) {
+  const newChat = await Chat.create({
+    userId,
+    roomId,
+    message,
+  });
 
+  const chat = await Chat.findByPk(newChat.id, {
+    include: [
+      {
+        model: User,
+        as: "user",
+        attributes: ["id", "username"],
+      },
+    ],
+  });
 
-async function postMessage(userId, message) {
-
-    const newChat = await Chat.create({
-        userId,
-        message
-    });
-
-    const chat = await Chat.findByPk(newChat.id, {
-        include: [
-            {
-                model: User,
-                  as: "user",
-                attributes: ["id", "username"]
-            }
-        ]
-    });
-
-    return chat;
+  return chat;
 }
 
-
-
 async function getAllMessages() {
+  const chats = await Chat.findAll({
+    include: [
+      {
+        model: User,
+        as: "user",
+        attributes: ["id", "username"],
+      },
+    ],
+    order: [["createdAt", "ASC"]],
+  });
 
-    const chats = await Chat.findAll({
-        include: [
-            {
-                model: User,
-                  as: "user",
-                attributes: ["id", "username"]
-            }
-        ],
-        order: [["createdAt", "ASC"]]
-    });
-
-    return chats.map(chat => ({
-    
+  return chats.map((chat) => ({
     username: chat.user.username,
     userId: chat.user.id,
     message: chat.message,
-    createdAt: chat.createdAt
-
-    }));
+    createdAt: chat.createdAt,
+  }));
 }
-module.exports = {postMessage, getAllMessages};
+
+async function getRoomMessages(roomId) {
+  const chats = await Chat.findAll({
+    where: {
+      roomId,
+    },
+
+    include: [
+      {
+        model: User,
+        as: "user",
+        attributes: ["id", "username"],
+      },
+    ],
+
+    order: [["createdAt", "ASC"]],
+  });
+
+  return chats.map((chat) => ({
+    userId: chat.user.id,
+
+    username: chat.user.username,
+
+    message: chat.message,
+
+    createdAt: chat.createdAt,
+  }));
+}
+
+async function searchEmail(email) {
+  const user = await User.findOne({ where: { email } });
+  return user;
+}
+
+module.exports = { postMessage, getAllMessages, getRoomMessages, searchEmail };

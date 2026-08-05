@@ -9,8 +9,9 @@
 </head>
 <body>
 
-<div class="chat-container">
+<!-- <div class="chat-container">
 
+    
     <div class="chat-header">
         <div class="profile">
             <div class="avatar">🤖</div>
@@ -55,7 +56,67 @@
 
          <button type="submit">
             ➤
-        </button>
+        </button> -->
+
+        <div class="app">
+
+    <!-- LEFT SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="search-box">
+
+            <input
+                type="email"
+                id="emailInput"
+                placeholder="Search user by email">
+
+            <button id="searchBtn">
+                Search
+            </button>
+
+        </div>
+
+        <div id="userList" class="user-list">
+
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT CHAT -->
+
+    <div class="chat-container">
+
+        <div class="chat-header">
+
+            <h3 id="chatUser">
+                Select a user
+            </h3>
+
+        </div>
+
+
+        <div class="chat-body" id="chatBody">
+
+        </div>
+
+
+        <form id="chatForm" class="chat-input">
+
+            <input
+                id="messageInput"
+                placeholder="Type message...">
+
+            <button>
+                ➤
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
     </form>
 

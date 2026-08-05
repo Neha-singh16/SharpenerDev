@@ -11,13 +11,101 @@ body{
 
     height:100vh;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    /* display:flex;  */
+    /* justify-content:center;
+    align-items:center; */
 
     background:#F7F3EB;
 }
 
+
+.app{
+
+    display:flex;
+
+    width:950px;
+
+    height:720px;
+
+    background:white;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    box-shadow:0 20px 40px rgba(0,0,0,.15);
+
+}
+
+/* LEFT */
+
+.sidebar{
+
+    width:280px;
+
+    border-right:1px solid #ddd;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.search-box{
+
+    padding:15px;
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+.search-box input{
+
+    flex:1;
+
+    padding:10px;
+
+}
+
+.user-list{
+
+    flex:1;
+
+    overflow:auto;
+
+}
+
+.user{
+
+    padding:15px;
+
+    cursor:pointer;
+
+    border-bottom:1px solid #eee;
+
+}
+
+.user:hover{
+
+    background:#f3f3f3;
+
+}
+
+.user h4{
+
+    margin-bottom:5px;
+
+}
+
+.user p{
+
+    font-size:13px;
+
+    color:gray;
+
+}
 .chat-container{
 
     width:420px;

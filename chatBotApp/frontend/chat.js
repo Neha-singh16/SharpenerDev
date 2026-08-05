@@ -1,5 +1,11 @@
 const BASE_URL = "http://localhost:3000/chat";
+const searchBtn = document.getElementById("searchBtn");
 
+const emailInput = document.getElementById("emailInput");
+
+const userList = document.getElementById("userList");
+
+const chatUser = document.getElementById("chatUser");
 // const socket = io("http://localhost:3000");
 const token = localStorage.getItem("token");
 const payload = JSON.parse(atob(token.split(".")[1]));
@@ -13,28 +19,34 @@ const socket = io("http://localhost:3000", {
     token: localStorage.getItem("token"),
   },
 });
+searchBtn.addEventListener("click", searchUser);
 
 const chatForm = document.getElementById("chatForm");
 const messageInput = document.getElementById("messageInput");
 const chatBody = document.getElementById("chatBody");
 
 // Load old messages when page opens
-window.addEventListener("DOMContentLoaded", loadMessages);
-const roomId = createRoom(currentUserId, selectedUserId);
+window.addEventListener("DOMContentLoaded", () => {
+
+    console.log("Chat Loaded");
+
+});
+// roomId = createRoom(currentUserId, selectedUserId);
 
 function createRoom(id1, id2) {
   return [id1, id2].sort().join("_");
 }
+function openChat(userId, username) {
+  selectedUserId = userId;
 
-function openChat(userId){
-    selectedUserId = userId;
+  roomId = createRoom(currentUserId, userId);
 
-    roomId = createRoom(currentUserId,userId);
+  chatUser.innerText = username;
 
-    socket.emit("join-room",roomId);
+  socket.emit("join-room", roomId);
 
+  loadRoomMessages(roomId);
 }
-
 socket.on("receive-message", (object) => {
   displayMessage(object);
 });
@@ -42,62 +54,103 @@ socket.on("receive-message", (object) => {
 // Send message
 chatForm.addEventListener("submit", sendMessage);
 
+
 async function sendMessage(e) {
-  e.preventDefault();
 
-  const message = messageInput.value.trim();
+    e.preventDefault();
 
-  if (!message) return;
+    if (!selectedUserId) {
+        return alert("Select a user first");
+    }
 
+    const message = messageInput.value.trim();
+
+    if (!message) {
+        return;
+    }
+
+    try {
+
+        await axios.post(
+            `${BASE_URL}/post-message`,
+            {
+                roomId,
+                message
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        messageInput.value = "";
+
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
+async function searchUser() {
   try {
-    // const res = await axios.post(
-    //   `${BASE_URL}/post-message`,
-    //   { message },
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   },
-    // );
+    const email = emailInput.value.trim();
 
-    socket.emit("new-message", {
-      roomId,
+    if (!email) {
+      return alert("Enter email");
+    }
 
-      message,
-    });
-    // // Show message instantly
-    // displayMessage({
-    //     message,
-    //     createdAt: new Date()
-    // });
+    const res = await axios.get(
+      `${BASE_URL}/search?email=${email}`,
 
-    messageInput.value = "";
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    showUser(res.data.user);
   } catch (err) {
-    console.error(err);
-    alert("Unable to send message");
+    alert(err.response?.data?.error || "User not found");
   }
 }
 
-async function loadMessages() {
-  try {
-    const res = await axios.get(`${BASE_URL}/read-messages`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+function showUser(user){
 
-    // Clear existing messages
+    userList.innerHTML = `
+
+        <div class="user"
+            onclick='openChat(${user.id},"${user.username}")'>
+
+            <h4>${user.username}</h4>
+
+            <p>${user.email}</p>
+
+        </div>
+
+    `;
+
+}
+async function loadRoomMessages(roomId) {
+  try {
+    const res = await axios.get(
+      `${BASE_URL}/messages/${roomId}`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
     chatBody.innerHTML = "";
 
-    const chats = res.data.chats;
-
-    chats.forEach((chat) => {
+    res.data.chats.forEach((chat) => {
       displayMessage(chat);
     });
   } catch (err) {
-    console.error(err);
-
-    alert("Unable to load messages");
+    console.log(err);
   }
 }
 
