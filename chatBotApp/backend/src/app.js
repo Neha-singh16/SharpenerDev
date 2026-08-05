@@ -7,7 +7,7 @@ const cors = require("cors");
 // We need this because Socket.IO attaches to an HTTP server, NOT directly to Express.
 require("dotenv").config();
 
-
+const User = require("./models/userModel"); 
 // Import Node's built-in HTTP module
 // We need this because Socket.IO attaches to an HTTP server, NOT directly to Express.
 const http = require("http");
@@ -33,6 +33,40 @@ const io = new Server(server, {
   },
 });
 
+
+io.use(async (socket, next) => {
+    try {
+
+        // Get token sent from frontend
+        const token = socket.handshake.auth.token;
+
+        if (!token) {
+            return next(new Error("Token Missing"));
+        }
+
+        // Verify JWT
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Find user in database
+        const user = await User.findByPk(decoded.userId);
+
+        if (!user) {
+            return next(new Error("User not found"));
+        }
+
+        // Save authenticated user on socket
+        socket.user = user;
+
+        // Allow connection
+        next();
+
+    } catch (err) {
+
+        next(new Error("Invalid Token"));
+
+    }
+});
+
 // Store the Socket.IO instance inside Express.
 //
 // Why?
@@ -49,8 +83,9 @@ app.set("io", io);
 io.on("connection", (socket) => {
   console.log(`Socket connected: ${socket.id}`);
 
+
   socket.on("disconnect", () => {
-    console.log(`Socket disconnected: ${socket.id}`);
+    console.log(`Socket disconnected: ${socket.id} & ${socket.user.username}`);
   });
 });
 app.use("/users", userRouter);

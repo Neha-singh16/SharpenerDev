@@ -1,6 +1,12 @@
 const BASE_URL = "http://localhost:3000/chat";
-const socket = io("http://localhost:3000");
+
+// const socket = io("http://localhost:3000");
 const token = localStorage.getItem("token");
+const socket = io("http://localhost:3000", {
+    auth: {
+        token: localStorage.getItem("token")
+    }
+});
 
 const chatForm = document.getElementById("chatForm");
 const messageInput = document.getElementById("messageInput");
@@ -9,8 +15,10 @@ const chatBody = document.getElementById("chatBody");
 // Load old messages when page opens
 window.addEventListener("DOMContentLoaded", loadMessages);
 
-socket.on("receive-message", (chat) => {
-    displayMessage(chat);
+
+
+socket.on("receive-message", (object) => {
+    displayMessage(object);
 });
 
 // Send message
@@ -35,11 +43,11 @@ async function sendMessage(e) {
             }
         );
 
-        // Show message instantly
-        displayMessage({
-            message,
-            createdAt: new Date()
-        });
+        // // Show message instantly
+        // displayMessage({
+        //     message,
+        //     createdAt: new Date()
+        // });
 
         messageInput.value = "";
 
@@ -81,6 +89,9 @@ async function loadMessages() {
 
 }
 
+
+
+
 function displayMessage(chat) {
 
     const time = new Date(chat.createdAt).toLocaleTimeString([], {
@@ -91,11 +102,11 @@ function displayMessage(chat) {
     chatBody.innerHTML += `
         <div class="message sent">
             <div class="bubble">
+                <strong>${chat.username}</strong><br>
                 ${chat.message}
                 <span>${time}</span>
             </div>
         </div>
     `;
-
-    chatBody.scrollTop = chatBody.scrollHeight;
+ chatBody.scrollTop = chatBody.scrollHeight;
 }
