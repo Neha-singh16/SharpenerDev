@@ -7,7 +7,9 @@ require("dotenv").config();
 const http = require("http");
 const db = require("./database/db-connection");
 const userRouter = require("./routers/userRouter");
-const chatRouter = require("./routers/chatRouter");
+const chatRouter = require("./routers/chatRouter")
+const groupRouter = require("./routers/groupRouter");
+const mediaRouter = require("./routers/mediaRouter");
 require("./models/index");
 const socketIO = require("./socket_io");
 const server = http.createServer(app);
@@ -20,10 +22,13 @@ const io = socketIO(server);
 app.set("io", io);
 app.use("/users", userRouter);
 app.use("/chat", chatRouter);
+app.use("/groups", groupRouter);
+app.use("/media", mediaRouter);
 
 const PORT = process.env.PORT || 3000;
 
-db.sync()
+// db.sync()
+db.sync({alter: true})
   .then(() => {
     console.log("Database synced successfully.");
 

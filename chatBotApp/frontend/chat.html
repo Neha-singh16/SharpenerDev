@@ -1,129 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>ChatMe</title>
 
-    <link rel="stylesheet" href="chat.css">
-</head>
-<body>
+    <link rel="stylesheet" href="chat.css" />
+  </head>
 
-<!-- <div class="chat-container">
+  <body>
+    <div class="app">
+      <!-- ================= SIDEBAR ================= -->
 
-    
-    <div class="chat-header">
-        <div class="profile">
-            <div class="avatar">🤖</div>
-
-            <div class="details">
-                <h3>ChatMe Assistant</h3>
-                <span>Online</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="chat-body" id="chatBody">
-
-        <div class="message received">
-            <div class="bubble">
-                Hello 👋
-                <span>11:10 AM</span>
-            </div>
+      <aside class="sidebar">
+        <div class="logo">
+          <h2>💬 ChatMe</h2>
         </div>
 
-        <div class="message sent">
-            <div class="bubble">
-                Hi! I need help planning a trip.
-                <span>11:11 AM</span>
-            </div>
+        <div class="search-section">
+          <input
+            type="email"
+            id="emailInput"
+            placeholder="Search user by email"
+          />
+
+          <button id="searchBtn">Search</button>
         </div>
 
-        <div class="message received">
-            <div class="bubble">
-                Sure 😊 Where are you travelling?
-                <span>11:11 AM</span>
-            </div>
+        <button id="createGroupBtn">➕ Create Group</button>
+
+        <h3 class="section-title">Chats</h3>
+
+        <div id="conversationList">
+          <!-- Personal chats and Groups appear here -->
         </div>
+      </aside>
 
-    </div>
-<form class="chat-input" id="chatForm">
+      <!-- ================= CHAT ================= -->
 
-        <input
-            type="text"
-            placeholder="Type your message..."
-            id="messageInput">
-
-         <button type="submit">
-            ➤
-        </button> -->
-
-        <div class="app">
-
-    <!-- LEFT SIDEBAR -->
-
-    <div class="sidebar">
-
-        <div class="search-box">
-
-            <input
-                type="email"
-                id="emailInput"
-                placeholder="Search user by email">
-
-            <button id="searchBtn">
-                Search
-            </button>
-
-        </div>
-
-        <div id="userList" class="user-list">
-
-        </div>
-
-    </div>
-
-
-    <!-- RIGHT CHAT -->
-
-    <div class="chat-container">
-
+      <main class="chat-container">
         <div class="chat-header">
+          <div class="profile">
+            <div class="avatar">💬</div>
 
-            <h3 id="chatUser">
-                Select a user
-            </h3>
+            <div>
+              <h3 id="chatUser">Select a Conversation</h3>
 
+              <span id="chatStatus"> Start chatting... </span>
+            </div>
+          </div>
         </div>
 
-
-        <div class="chat-body" id="chatBody">
-
-        </div>
-
+        <div id="chatBody" class="chat-body"></div>
 
         <form id="chatForm" class="chat-input">
+          <input
+            id="messageInput"
+            type="text"
+            placeholder="Type your message..."
+          />
+          <input type="file" id="mediaInput" hidden />
 
-            <input
-                id="messageInput"
-                placeholder="Type message...">
-
-            <button>
-                ➤
-            </button>
-
+          <button type="button" id="mediaBtn">📎</button>
+          <button type="submit">➤</button>
         </form>
-
+      </main>
     </div>
 
-</div>
+    <!-- ================= CREATE GROUP MODAL ================= -->
 
-    </form>
+    <div id="groupModal" class="modal">
+      <div class="modal-content">
+        <h2>Create Group</h2>
 
-</div>
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="chat.js"></script>
+        <input id="groupName" placeholder="Enter Group Name" />
 
-</body>
+        <textarea
+          id="memberEmails"
+          rows="5"
+          placeholder="Enter member emails (comma separated)"
+        ></textarea>
+
+        <div class="modal-buttons">
+          <button id="createGroup">Create</button>
+
+          <button id="closeModal">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="js/socket.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/personal.js"></script>
+    <script src="js/group.js"></script>
+    <script src="js/app.js"></script>
+  </body>
 </html>

@@ -1,10 +1,14 @@
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
 
-async function postMessage(userId, roomId, message) {
+async function postMessage(userId, roomId, groupId,  mediaUrl=null,
+    mediaType=null, message) {
   const newChat = await Chat.create({
     userId,
     roomId,
+    groupId,
+    mediaUrl,
+    mediaType,
     message,
   });
 

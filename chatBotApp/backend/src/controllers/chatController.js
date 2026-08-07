@@ -5,13 +5,15 @@ async function postMessage(req, res) {
   try {
     const io = req.app.get("io");
 
-    const { message, roomId } = req.body;
+    const { message, roomId , groupId } = req.body;
 
     const chat = await chatService.postMessage(
       req.user.id,
 
       roomId,
+      groupId,
 
+    
       message,
     );
 

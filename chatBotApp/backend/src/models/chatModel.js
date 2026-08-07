@@ -15,11 +15,22 @@ const Chat = sequelize.define(
     },
     roomId: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    }, mediaUrl:{
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    mediaType: {
+    type: DataTypes.STRING,
+    allowNull: true,
+},
     message: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {
