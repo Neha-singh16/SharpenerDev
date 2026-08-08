@@ -5,11 +5,13 @@ const cors = require("cors");
 require("dotenv").config();
 
 const http = require("http");
+require("./jobs/archivedChats")
 const db = require("./database/db-connection");
 const userRouter = require("./routers/userRouter");
 const chatRouter = require("./routers/chatRouter")
 const groupRouter = require("./routers/groupRouter");
 const mediaRouter = require("./routers/mediaRouter");
+const archiveRouter = require("./routers/archivedChatRouter");
 require("./models/index");
 const socketIO = require("./socket_io");
 const server = http.createServer(app);
@@ -24,6 +26,10 @@ app.use("/users", userRouter);
 app.use("/chat", chatRouter);
 app.use("/groups", groupRouter);
 app.use("/media", mediaRouter);
+app.use(
+    "/admin",
+    archiveRouter
+);
 
 const PORT = process.env.PORT || 3000;
 
