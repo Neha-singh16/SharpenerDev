@@ -27,8 +27,8 @@ app.use("/media", mediaRouter);
 
 const PORT = process.env.PORT || 3000;
 
-// db.sync()
-db.sync({alter: true})
+db.sync()
+// db.sync({alter: true})
   .then(() => {
     console.log("Database synced successfully.");
 

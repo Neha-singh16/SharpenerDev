@@ -20,14 +20,23 @@ const Chat = sequelize.define(
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: true,
-    }, mediaUrl:{
+    },
+    mediaUrl: {
       type: DataTypes.STRING,
       allowNull: true,
     },
     mediaType: {
-    type: DataTypes.STRING,
-    allowNull: true,
-},
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    fileName: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    fileSize: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     message: {
       type: DataTypes.STRING,
       allowNull: true,

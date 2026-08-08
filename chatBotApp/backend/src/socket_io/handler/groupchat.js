@@ -1,67 +1,40 @@
-// const chatService = require("../../services/chatService");
-// const groupService = require("../../services/groupService");
-
-// module.exports = (socket, io) => {
-//   socket.on("join-group", (groupId) => {
-//     socket.join(`group_${groupId}`);
-
-//     console.log(socket.user.username, "joined group", groupId);
-//   });
-
-
-//   socket.on("leave-group", (groupId) => {
-//     socket.leave(`group_${groupId}`);
-//   });
-
-
-//   socket.on("group-message", async ({ groupId, message }) => {
-//     const chat = await groupService.saveGroupMessage(
-//       socket.user.id,
-
-//       groupId,
-
-//       message,
-//     );
-
-//     io.to(groupId).emit(
-//       "receive-group-message",
-
-//       chat,
-//     );
-
-//   });
-//   socket.on("disconnect", () => {
-//     console.log(socket.user.username, "left");
-//   });
-// };
-
-
-const groupService = require("../../services/groupService");
+const chatService = require("../../services/chatService");
 
 module.exports = (socket, io) => {
+  socket.on("join-group", (groupId) => {
+    socket.join(`group_${groupId}`);
 
-    console.log("group handler loaded");
-    console.log("io =", io);
+    console.log(socket.user.username, "joined group", groupId);
+  });
 
-    socket.on("join-group", (groupId) => {
-        socket.join(`group_${groupId}`);
-        console.log(socket.user.username, "joined", groupId);
-    });
+  socket.on("leave-group", (groupId) => {
+    socket.leave(`group_${groupId}`);
+  });
 
-    socket.on("group-message", async ({ groupId, message }) => {
+  socket.on("group-message", async ({ groupId, message }) => {
+    try {
+      const chat = await chatService.postMessage({
+        userId: socket.user.id,
 
-        console.log("Inside group-message");
-        console.log("io =", io);
+        groupId,
 
-        const chat = await groupService.saveGroupMessage(
-            socket.user.id,
-            groupId,
-            message
-        );
+        message,
 
-        io.to(`group_${groupId}`).emit(
-            "receive-group-message",
-            chat
-        );
-    });
+        mediaUrl: null,
+
+        mediaType: null,
+
+        fileName: null,
+
+        fileSize: null,
+      });
+
+      io.to(`group_${groupId}`).emit("receive-group-message", chat);
+    } catch (err) {
+      console.error("Group message error:", err);
+    }
+  });
+  socket.on("disconnect", () => {
+    console.log(socket.user.username, "left");
+  });
 };

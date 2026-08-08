@@ -2,17 +2,23 @@ const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
 const Group = require("../models/groupModel");
 const GroupMember = require("../models/groupMemberModel");
+
 const { Op } = require("sequelize");
 
+
 async function createGroup(groupName, members, currentUserEmail) {
+  // Add creator to group
   members.push(currentUserEmail);
 
   const newGroup = await Group.create({
     groupName,
   });
+
   await addMembersToGroup(newGroup.id, members);
+
   return newGroup;
 }
+
 
 async function getGroups(userId) {
   const groups = await Group.findAll({
@@ -20,7 +26,9 @@ async function getGroups(userId) {
       {
         model: User,
 
-        where: { id: userId },
+        where: {
+          id: userId,
+        },
 
         through: {
           attributes: [],
@@ -36,6 +44,7 @@ async function getGroups(userId) {
   }));
 }
 
+
 async function getGroupMessages(groupId) {
   const chats = await Chat.findAll({
     where: {
@@ -45,7 +54,9 @@ async function getGroupMessages(groupId) {
     include: [
       {
         model: User,
+
         as: "user",
+
         attributes: ["id", "username"],
       },
     ],
@@ -54,51 +65,19 @@ async function getGroupMessages(groupId) {
   });
 
   return chats.map((chat) => ({
+    id: chat.id,
     userId: chat.user.id,
-
     username: chat.user.username,
-
+    groupId: chat.groupId,
     message: chat.message,
-
+    mediaUrl: chat.mediaUrl,
+    mediaType: chat.mediaType,
+    fileName: chat.fileName,
+    fileSize: chat.fileSize,
     createdAt: chat.createdAt,
   }));
 }
 
-async function saveGroupMessage(
-  userId,
-  groupId,
-  mediaUrl = null,
-  mediaType = null,
-  message,
-) {
-  const newChat = await Chat.create({
-    userId,
-    groupId,
-    mediaUrl,
-    mediaType,
-    message,
-  });
-
-  const chat = await Chat.findByPk(newChat.id, {
-    include: [
-      {
-        model: User,
-        as: "user",
-        attributes: ["id", "username"],
-      },
-    ],
-  });
-
-  return {
-    userId: chat.user.id,
-    username: chat.user.username,
-    mediaUrl: chat.mediaUrl,
-
-    mediaType: chat.mediaType,
-    message: chat.message,
-    createdAt: chat.createdAt,
-  };
-}
 
 async function addMembersToGroup(groupId, members) {
   const users = await User.findAll({
@@ -109,7 +88,6 @@ async function addMembersToGroup(groupId, members) {
     },
   });
 
-  console.log(users);
   const groupMembers = users.map((user) => ({
     groupId,
 
@@ -117,8 +95,10 @@ async function addMembersToGroup(groupId, members) {
   }));
 
   await GroupMember.bulkCreate(groupMembers);
+
   return groupMembers;
 }
+
 
 async function deleteMember(groupId, userId) {
   const groupMember = await GroupMember.findOne({
@@ -127,7 +107,13 @@ async function deleteMember(groupId, userId) {
       userId,
     },
   });
+
+  if (!groupMember) {
+    throw new Error("Group member not found");
+  }
+
   await groupMember.destroy();
+
   return groupMember;
 }
 
@@ -135,7 +121,6 @@ module.exports = {
   createGroup,
   getGroups,
   getGroupMessages,
-  saveGroupMessage,
   addMembersToGroup,
   deleteMember,
 };

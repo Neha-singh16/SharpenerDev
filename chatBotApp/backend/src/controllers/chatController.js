@@ -1,80 +1,112 @@
+
 const chatService = require("../services/chatService");
 
+// ==========================================
+// SEND PERSONAL MESSAGE
+// ==========================================
 
 async function postMessage(req, res) {
   try {
     const io = req.app.get("io");
 
-    const { message, roomId , groupId } = req.body;
-
-    const chat = await chatService.postMessage(
-      req.user.id,
-
+    const {
       roomId,
+
       groupId,
 
-    
+      message = null,
+
+      mediaUrl = null,
+
+      mediaType = null,
+
+      fileName = null,
+
+      fileSize = null,
+    } = req.body;
+
+    const chat = await chatService.postMessage({
+      userId: req.user.id,
+
+      roomId,
+
+      groupId,
+
       message,
-    );
 
-    io.to(roomId).emit("receive-message", {
-      userId: chat.user.id,
+      mediaUrl,
 
-      username: chat.user.username,
+      mediaType,
 
-      message: chat.message,
+      fileName,
 
-      createdAt: chat.createdAt,
+      fileSize,
     });
+
+    // Only emit to personal room
+    if (roomId) {
+      io.to(roomId).emit("receive-message", chat);
+    }
 
     res.status(201).json(chat);
   } catch (err) {
+    console.error(err);
+
     res.status(500).json({
       error: err.message,
     });
   }
 }
+
+// ==========================================
+// GET ALL
+// ==========================================
+
 async function getAllMessages(req, res) {
   try {
     const chats = await chatService.getAllMessages();
 
-    res.status(201).json({ message: "Message fetched successfully", chats });
+    res.status(200).json({
+      message: "Messages fetched successfully",
+
+      chats,
+    });
   } catch (err) {
     res.status(500).json({
       error: err.message,
     });
   }
 }
-async function getRoomMessages(req,res){
 
-    try{
+// ==========================================
+// GET PERSONAL CHAT
+// ==========================================
 
-        const {roomId}=req.params;
+async function getRoomMessages(req, res) {
+  try {
+    const { roomId } = req.params;
 
-        const chats=await chatService.getRoomMessages(roomId);
+    const chats = await chatService.getRoomMessages(roomId);
 
-        res.status(200).json({
-
-            chats
-
-        });
-
-    }
-
-    catch(err){
-
-        res.status(500).json({
-
-            error:err.message
-
-        });
-
-    }
-
+    res.status(200).json({
+      chats,
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: err.message,
+    });
+  }
 }
+
+// ==========================================
+// SEARCH USER
+// ==========================================
+
 async function searchEmail(req, res) {
   try {
     const { email } = req.query;
+      console.log("QUERY:", req.query);
+        console.log("EMAIL FROM QUERY:", email);
 
     const user = await chatService.searchEmail(email);
 
@@ -86,9 +118,12 @@ async function searchEmail(req, res) {
 
     res.status(200).json({
       message: "User found",
+
       user,
     });
   } catch (err) {
+      console.log("SEARCH ERROR:", err);
+
     res.status(500).json({
       error: err.message,
     });
@@ -97,7 +132,10 @@ async function searchEmail(req, res) {
 
 module.exports = {
   postMessage,
+
   getAllMessages,
+
   getRoomMessages,
+
   searchEmail,
 };

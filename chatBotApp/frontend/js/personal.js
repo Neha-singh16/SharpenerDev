@@ -6,9 +6,26 @@ let roomId = "";
 // Search button
 document.getElementById("searchBtn").addEventListener("click", searchUser);
 
-/* ================================
-   Search User
-================================ */
+
+function showUser(user) {
+  const conversationList = document.getElementById("conversationList");
+
+  conversationList.innerHTML += `
+        <div
+            class="user"
+            onclick='openChat(
+                "${user.email}",
+                "${user.username}"
+            )'
+        >
+
+            <h4>👤 ${user.username}</h4>
+
+            <p>${user.email}</p>
+
+        </div>
+    `;
+}
 
 async function searchUser() {
   try {
@@ -18,48 +35,43 @@ async function searchUser() {
       return alert("Enter email");
     }
 
-    const res = await axios.get(
-      `${BASE_URL}/search?email=${email}`,
+    console.log("EMAIL BEING SENT:", email);
 
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const res = await axios.get(`${BASE_URL}/search`, {
+      params: {
+        email: email,
       },
-    );
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("SEARCH API RESPONSE:", res.data);
 
     showUser(res.data.user);
   } catch (err) {
+    console.log("SEARCH ERROR:", err.response?.data || err);
+
     alert(err.response?.data?.error || "User not found");
   }
 }
 
-/* ================================
-   Show User
-================================ */
+async function loadConversations() {
+  try {
+    const res = await axios.get(`${BASE_URL}/messages`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-function showUser(user) {
-  const conversationList = document.getElementById("conversationList");
-
-  conversationList.innerHTML += `
-
-        <div class="user"
-
-            onclick='openChat("${user.email}","${user.username}")'>
-
-            <h4>👤 ${user.username}</h4>
-
-            <p>${user.email}</p>
-
-        </div>
-
-    `;
+    showUsers(res.data.chats);
+  } catch (err) {
+    console.log("Failed to load conversations:", err);
+  }
 }
 
-/* ================================
-   Create Personal Room
-================================ */
 
+  //  Create Personal Room
 function createRoom(email1, email2) {
   return [email1, email2]
 
@@ -68,15 +80,12 @@ function createRoom(email1, email2) {
     .join("_");
 }
 
-/* ================================
-   Open Chat
-================================ */
 
+  //  Open Chat
 function openChat(email, username) {
-
   selectedGroupId = null;
 
-    selectedEmail = email;
+  selectedEmail = email;
 
   roomId = createRoom(
     currentUserEmail,
@@ -99,10 +108,6 @@ function openChat(email, username) {
   loadRoomMessages(roomId);
 }
 
-/* ================================
-   Load Messages
-================================ */
-
 async function loadRoomMessages(roomId) {
   try {
     const res = await axios.get(
@@ -123,10 +128,7 @@ async function loadRoomMessages(roomId) {
   }
 }
 
-/* ================================
-   Send Message
-================================ */
-
+  //  Send Message
 async function sendPersonalMessage(message) {
   try {
     await axios.post(

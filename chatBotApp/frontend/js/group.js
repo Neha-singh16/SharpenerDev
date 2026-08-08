@@ -4,10 +4,6 @@ let selectedGroupId = null;
 
 const groupModal = document.getElementById("groupModal");
 
-/* ===========================
-   EVENT LISTENERS
-=========================== */
-
 document.getElementById("createGroupBtn").addEventListener("click", () => {
   groupModal.style.display = "flex";
 });
@@ -18,10 +14,8 @@ document.getElementById("closeModal").addEventListener("click", () => {
 
 document.getElementById("createGroup").addEventListener("click", createGroup);
 
-/* ===========================
-   CREATE GROUP
-=========================== */
 
+//  CREATE GROUP
 async function createGroup() {
   const groupName = document.getElementById("groupName").value.trim();
 
@@ -62,10 +56,7 @@ async function createGroup() {
   }
 }
 
-/* ===========================
-   LOAD GROUPS
-=========================== */
-
+  //  LOAD GROUPS
 async function loadGroups() {
   try {
     const res = await axios.get(
@@ -84,10 +75,8 @@ async function loadGroups() {
   }
 }
 
-/* ===========================
-   SHOW GROUPS
-=========================== */
 
+// SHOW GROUPS
 function showGroups(groups) {
   const conversationList = document.getElementById("conversationList");
 
@@ -110,10 +99,8 @@ function showGroups(groups) {
   });
 }
 
-/* ===========================
-   OPEN GROUP
-=========================== */
 
+  //  OPEN GROUP
 function openGroup(group) {
   selectedEmail = null;
 
@@ -134,10 +121,8 @@ function openGroup(group) {
   loadGroupMessages(selectedGroupId);
 }
 
-/* ===========================
-   LOAD GROUP MESSAGES
-=========================== */
 
+//  LOAD GROUP MESSAGES
 async function loadGroupMessages(groupId) {
   try {
     const res = await axios.get(
@@ -158,26 +143,18 @@ async function loadGroupMessages(groupId) {
   }
 }
 
-/* ===========================
-   SEND GROUP MESSAGE
-=========================== */
-
+// SEND GROUP MESSAGE
 function sendGroupMessage(message) {
   if (!selectedGroupId) {
     return alert("Select a group");
   }
 
-  socket.emit(
-    "group-message",
+  socket.emit("group-message", {
+    groupId: selectedGroupId,
 
-    {
-      groupId: selectedGroupId,
-
-      message,
-    },
-  );
+    message,
+  });
 }
-
 // socket.on("receive-group-message", (chat) => {
 //   displayMessage(chat);
 // });
