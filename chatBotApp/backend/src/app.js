@@ -12,6 +12,7 @@ const chatRouter = require("./routers/chatRouter")
 const groupRouter = require("./routers/groupRouter");
 const mediaRouter = require("./routers/mediaRouter");
 const archiveRouter = require("./routers/archivedChatRouter");
+const aiRouter = require("./routers/aiRouter");
 require("./models/index");
 const socketIO = require("./socket_io");
 const server = http.createServer(app);
@@ -31,6 +32,7 @@ app.use(
     archiveRouter
 );
 
+app.use("/ai", aiRouter);
 const PORT = process.env.PORT || 3000;
 
 db.sync()

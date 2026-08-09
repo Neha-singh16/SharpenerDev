@@ -49,6 +49,7 @@ async function searchUser() {
     console.log("SEARCH API RESPONSE:", res.data);
 
     showUser(res.data.user);
+    emailInput.value= "";
   } catch (err) {
     console.log("SEARCH ERROR:", err.response?.data || err);
 
@@ -84,7 +85,7 @@ function createRoom(email1, email2) {
   //  Open Chat
 function openChat(email, username) {
   selectedGroupId = null;
-
+  resetAIState();
   selectedEmail = email;
 
   roomId = createRoom(
@@ -107,27 +108,48 @@ function openChat(email, username) {
 
   loadRoomMessages(roomId);
 }
-
 async function loadRoomMessages(roomId) {
-  try {
-    const res = await axios.get(
-      `${BASE_URL}/messages/${roomId}`,
 
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    try {
 
-    clearChat();
+        const res = await axios.get(
+            `${BASE_URL}/messages/${roomId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
 
-    res.data.chats.forEach(displayMessage);
-  } catch (err) {
-    console.log(err);
-  }
+        clearChat();
+        clearSmartReplies();
+
+        const chats = res.data.chats;
+
+        chats.forEach(displayMessage);
+
+
+        // Smart replies for latest incoming message
+        const latestMessage = chats[chats.length - 1];
+
+        if (
+            latestMessage &&
+            latestMessage.userId !== currentUserId &&
+            latestMessage.message &&
+            !latestMessage.mediaUrl
+        ) {
+
+            await generateSmartReplies(
+                latestMessage.message
+            );
+        }
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
 }
-
   //  Send Message
 async function sendPersonalMessage(message) {
   try {

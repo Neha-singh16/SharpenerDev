@@ -35,7 +35,6 @@ function displayMessage(chat) {
         `;
   }
 
-
   // AUDIO
   else if (chat.mediaType && chat.mediaType.startsWith("audio/")) {
     content = `
@@ -51,7 +50,6 @@ function displayMessage(chat) {
         `;
   }
 
- 
   // PDF / DOCX / ZIP / ETC.
   else {
     content = `
@@ -65,15 +63,12 @@ function displayMessage(chat) {
         `;
   }
 
-
   // MESSAGE TYPE
   const messageType = chat.userId === currentUserId ? "sent" : "received";
 
-  
   // USERNAME
- const username =
+  const username =
     messageType === "received" ? `<strong>${chat.username}</strong><br>` : "";
-
 
   // TIME
   const time = new Date(chat.createdAt).toLocaleTimeString([], {
@@ -81,9 +76,8 @@ function displayMessage(chat) {
     minute: "2-digit",
   });
 
-
   // ADD TO CHAT
-    const chatBody = document.getElementById("chatBody");
+  const chatBody = document.getElementById("chatBody");
 
   chatBody.innerHTML += `
 
@@ -105,6 +99,47 @@ function displayMessage(chat) {
 
   chatBody.scrollTop = chatBody.scrollHeight;
 }
+
+function showSmartReplies(replies) {
+  const container = document.getElementById("smartReplies");
+
+  container.innerHTML = "";
+
+  if (!replies || replies.length === 0) {
+    return;
+  }
+
+  replies.forEach((reply) => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+
+    button.className = "smart-reply";
+
+    button.innerText = reply;
+
+    button.addEventListener("click", () => {
+      useSmartReply(reply);
+    });
+
+    container.appendChild(button);
+  });
+}
+
+function clearTypingSuggestions() {
+    typingSuggestions.innerHTML = "";
+
+    clearTimeout(suggestionTimer);
+}
+
+function clearSmartReplies() {
+
+    const container =
+        document.getElementById("smartReplies");
+
+    container.innerHTML = "";
+}
+
 
 function clearChat() {
   document.getElementById("chatBody").innerHTML = "";

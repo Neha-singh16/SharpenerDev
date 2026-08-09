@@ -14,7 +14,6 @@ document.getElementById("closeModal").addEventListener("click", () => {
 
 document.getElementById("createGroup").addEventListener("click", createGroup);
 
-
 //  CREATE GROUP
 async function createGroup() {
   const groupName = document.getElementById("groupName").value.trim();
@@ -56,7 +55,7 @@ async function createGroup() {
   }
 }
 
-  //  LOAD GROUPS
+//  LOAD GROUPS
 async function loadGroups() {
   try {
     const res = await axios.get(
@@ -74,7 +73,6 @@ async function loadGroups() {
     console.log(err);
   }
 }
-
 
 // SHOW GROUPS
 function showGroups(groups) {
@@ -99,12 +97,12 @@ function showGroups(groups) {
   });
 }
 
-
-  //  OPEN GROUP
+//  OPEN GROUP
 function openGroup(group) {
   selectedEmail = null;
 
   selectedGroupId = group.groupId || group.id;
+  resetAIState();
 
   updateChatHeader(
     group.groupName,
@@ -121,23 +119,32 @@ function openGroup(group) {
   loadGroupMessages(selectedGroupId);
 }
 
-
 //  LOAD GROUP MESSAGES
 async function loadGroupMessages(groupId) {
   try {
-    const res = await axios.get(
-      `${GROUP_BASE_URL}/${groupId}/messages`,
-
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const res = await axios.get(`${GROUP_BASE_URL}/${groupId}/messages`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
 
     clearChat();
+    clearSmartReplies();
 
-    res.data.chats.forEach(displayMessage);
+    const chats = res.data.chats;
+
+    chats.forEach(displayMessage);
+
+    const latestMessage = chats[chats.length - 1];
+
+    if (
+      latestMessage &&
+      latestMessage.userId !== currentUserId &&
+      latestMessage.message &&
+      !latestMessage.mediaUrl
+    ) {
+      await generateSmartReplies(latestMessage.message);
+    }
   } catch (err) {
     console.log(err);
   }
@@ -155,6 +162,8 @@ function sendGroupMessage(message) {
     message,
   });
 }
+
+
 // socket.on("receive-group-message", (chat) => {
 //   displayMessage(chat);
 // });
