@@ -9,9 +9,9 @@ async function sendWelcomeEmail(toEmail, name) {
   console.log("To:", toEmail);
 
   const email = {
-    subject: "Welcome to Expense Tracker",
+    subject: "Welcome to ChatBot App",
     sender: {
-      name: "Expense Tracker",
+      name: "ChatBot App",
       email: "singhn5443@gmail.com",
     },
     to: [
@@ -21,7 +21,7 @@ async function sendWelcomeEmail(toEmail, name) {
       },
     ],
     htmlContent: `
-      <h1>Welcome to Expense Tracker, ${name}!</h1>
+      <h1>Welcome to ChatBot App, ${name}!</h1>
       <p>Thank you for signing up.</p>
     `,
   };
@@ -46,7 +46,7 @@ const resetLink =`http://localhost:3000/users/password/resetpassword/${token}`;
     subject: "Reset your password!",
 
     sender: {
-      name: "Expense Tracker",
+      name: "ChatBot App",
       email: "singhn5443@gmail.com",
     },
 
@@ -88,7 +88,7 @@ const resetLink =`http://localhost:3000/users/password/resetpassword/${token}`;
 
             <br>
 
-            <p>Expense Tracker Team</p>
+            <p>ChatBot App Team</p>
         `,
 
   };

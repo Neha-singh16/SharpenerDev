@@ -13,7 +13,15 @@ async function createUser(req, res) {
     const user = await User.create({ name, email, password: hashedPassword });
     console.log("User created");
 
-    await sendWelcomeEmail(user.email, user.name);
+    // Send welcome email - non-blocking, errors are logged but don't fail signup
+    try {
+      await sendWelcomeEmail(user.email, user.name);
+      console.log("Welcome email sent successfully");
+    } catch (emailErr) {
+      console.error("Failed to send welcome email (non-critical):", emailErr.message);
+      // Email failure doesn't fail the signup - user is already created
+    }
+
     res.status(201).json({ message: "User created sucessfully", user });
   } catch (err) {
     console.log("ERROR:");

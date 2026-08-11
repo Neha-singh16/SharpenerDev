@@ -1,0 +1,12 @@
+[
+  {
+    "id": 26,
+    "amount": 3000,
+    "description": "shoes",
+    "category": "Shopping",
+    "note": null,
+    "createdAt": "2026-08-05T06:01:21.000Z",
+    "updatedAt": "2026-08-05T06:01:21.000Z",
+    "UserId": 21
+  }
+]

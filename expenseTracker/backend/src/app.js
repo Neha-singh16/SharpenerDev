@@ -6,6 +6,8 @@ const express = require("express");
 const cors = require('cors');
 const logger = require("../utils/requestLogger");
 const compression = require("compression");
+const path = require('path');
+const fs = require('fs');
 const app = express();
 const db = require("../utils/db");
 const userRouter = require("../router/userRouter")
@@ -25,6 +27,18 @@ app.use(cors());
 app.use(express.json());
 app.use(compression());
 app.use(logger);
+
+// Serve static files from uploads directory for local development
+const backendDir = path.dirname(__dirname);
+const uploadsPath = path.join(backendDir, 'uploads');
+
+// Ensure uploads directory exists
+if (!fs.existsSync(uploadsPath)) {
+    fs.mkdirSync(uploadsPath, { recursive: true });
+}
+
+console.log("Serving downloads from:", uploadsPath);
+app.use('/downloads', express.static(uploadsPath));
 
 app.use("/users", userRouter);
 app.use("/users/expenses", expenseRouter);

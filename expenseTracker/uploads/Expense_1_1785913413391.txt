@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "amount": 40000,
+    "description": "suitcase",
+    "category": "Others",
+    "note": null,
+    "createdAt": "2026-08-05T06:14:04.000Z",
+    "updatedAt": "2026-08-05T06:14:04.000Z",
+    "UserId": 1
+  },
+  {
+    "id": 2,
+    "amount": 1200,
+    "description": "heels",
+    "category": "Others",
+    "note": null,
+    "createdAt": "2026-08-05T06:16:10.000Z",
+    "updatedAt": "2026-08-05T06:16:10.000Z",
+    "UserId": 1
+  },
+  {
+    "id": 3,
+    "amount": 15000,
+    "description": "skincare",
+    "category": "Transport",
+    "note": null,
+    "createdAt": "2026-08-05T06:16:23.000Z",
+    "updatedAt": "2026-08-05T06:16:23.000Z",
+    "UserId": 1
+  },
+  {
+    "id": 4,
+    "amount": 2000,
+    "description": "stationary",
+    "category": "Others",
+    "note": null,
+    "createdAt": "2026-08-05T06:16:31.000Z",
+    "updatedAt": "2026-08-05T06:16:31.000Z",
+    "UserId": 1
+  }
+]

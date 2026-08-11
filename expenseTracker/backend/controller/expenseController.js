@@ -12,7 +12,7 @@ async function addExpense(req, res) {
   let aiCategory = "Others";
   let t;
   try {
-    const { amount, description , note } = req.body;
+    const { amount, description } = req.body;
     try {
       aiCategory = await suggestCategory(description);
     } catch (aiError) {
@@ -30,7 +30,6 @@ async function addExpense(req, res) {
 
         description,
         category: aiCategory,
-        note,
         UserId: userId,
       },
       {
@@ -122,7 +121,7 @@ async function updateExpense(req, res) {
   try {
     const expenseId = req.params.id;
     const userId = req.user.id;
-    const { amount, description, category  , note} = req.body;
+    const { amount, description, category } = req.body;
 
     const expense = await Expense.findOne({
       where: {
@@ -143,7 +142,7 @@ async function updateExpense(req, res) {
     expense.amount = amount;
     expense.description = description;
     expense.category = category;
-    expense.note = note;
+    // expense.note = note;
 
     await expense.save({
       transaction: t,

@@ -20,7 +20,9 @@ const pagination = document.getElementById("pagination");
 const itemsPerPage = document.getElementById("itemsPerPage");
 // const reportFilter = document.getElementById("reportFilter");
 const dynamicFilter = document.getElementById("dynamicFilter");
-// const BASE_URL = "http://13.201.130.108:3000/users";
+
+// Base URL for API calls
+// const BASE_URL = "http://localhost:3000/users";
 
 let editExpenseId = null;
 let allExpenses = [];
@@ -138,8 +140,7 @@ async function addExpense(e) {
   const expense = {
     amount: amount.value,
     description: description.value,
-    // category: category.value,
-    note: note.value,
+    // category: category.value
   };
 
   try {
@@ -162,6 +163,12 @@ async function addExpense(e) {
     form.reset();
     // await loadExpenses();
     await loadExpenses(currentPage);
+    
+    // Refresh leaderboard if it's being displayed
+    if (leaderboardLoaded) {
+      leaderboardLoaded = false;
+      await showLeaderboard();
+    }
   } catch (err) {
     console.log(err);
   }
@@ -475,9 +482,14 @@ async function downloadReport() {
   try {
     const token = localStorage.getItem("token");
 
+    if (!token) {
+      alert("Session expired. Please login again.");
+      return;
+    }
+
+    // Step 1: Get the filename from the backend
     const res = await axios.get(
       `${BASE_URL}/download`,
-
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -485,12 +497,43 @@ async function downloadReport() {
       },
     );
 
-    // window.open(res.data.fileURL);
-    window.open(res.data.fileURL, "_blank");
-  } catch (err) {
-    console.log(err);
+    if (!res.data.success || !res.data.fileURL) {
+      alert("Failed to generate download URL");
+      return;
+    }
 
-    alert("Download failed");
+    // Step 2: Download the file using fetch with Authorization header
+    const filename = res.data.fileURL;
+    const downloadUrl = `${BASE_URL}/download/${filename}`;
+    
+    console.log("Downloading from:", downloadUrl);
+
+    const fileRes = await fetch(downloadUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!fileRes.ok) {
+      alert("Failed to download file: " + fileRes.statusText);
+      return;
+    }
+
+    // Step 3: Create a blob and download
+    const blob = await fileRes.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+
+    console.log("File downloaded successfully!");
+  } catch (err) {
+    console.error("Download error:", err);
+    alert("Download failed: " + (err.response?.data?.error || err.message));
   }
 }
 
@@ -505,7 +548,6 @@ function displayExpense(expense) {
       ${expense.description}
       <br>
       <small>${expense.category}</small>
-       <small>${expense.note}</small>
       ${
         expense.createdAt
           ? `<br><small class="text-muted">${formatDate(expense.createdAt)}</small>`
@@ -551,7 +593,6 @@ function editExpense(expense) {
   amount.value = expense.amount;
   description.value = expense.description;
   category.value = expense.category;
-  note.value = expense.note;
   editExpenseId = expense.id;
   submitBtn.innerHTML = "Update Expense";
 }

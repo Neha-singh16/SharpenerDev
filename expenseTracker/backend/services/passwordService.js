@@ -11,12 +11,20 @@ async function forgotPasswordService(email) {
   }
 
   const token = uuid();
- await ForgotPassword.create({
+  await ForgotPassword.create({
     id: token,
     active: true,
     UserId: user.id,
-});
-  await sendForgotPasswordEmail(user.email, user.name, token);
+  });
+
+  // Send email - non-blocking, errors are logged but don't fail the request
+  try {
+    await sendForgotPasswordEmail(user.email, user.name, token);
+    console.log("Forgot password email sent successfully");
+  } catch (emailErr) {
+    console.error("Failed to send forgot password email (non-critical):", emailErr.message);
+    // Email failure doesn't fail the forgot password - token is already created
+  }
 
   // res.status(200).json({message: "Password reset email sent successfully"})
   return {
