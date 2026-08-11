@@ -1,8 +1,9 @@
 // app.js
-
 let smartReplyRequestId = 0;
 let typingRequestId = 0;
 let suggestionTimer = null;
+let groups = [];
+let conversations = [];
 
 const chatForm = document.getElementById("chatForm");
 
@@ -10,15 +11,92 @@ const messageInput = document.getElementById("messageInput");
 
 const typingSuggestions = document.getElementById("typingSuggestions");
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
   console.log("Chat Application Started");
 
-  loadGroups();
+  await loadGroups();
+
+  await loadConversations();
 });
 
 messageInput.addEventListener("input", handleTyping);
 chatForm.addEventListener("submit", sendMessage);
 document.getElementById("searchBtn").addEventListener("click", searchUser);
+
+
+function renderConversationList() {
+
+    const conversationList =
+        document.getElementById(
+            "conversationList"
+        );
+
+    conversationList.innerHTML = "";
+
+    // =========================
+    // GROUPS
+    // =========================
+
+    groups.forEach((group) => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "user";
+
+        div.innerHTML = `
+            <h4>
+                👥 ${group.groupName}
+            </h4>
+
+            <p>
+                Group Chat
+            </p>
+        `;
+
+        div.addEventListener(
+            "click",
+            () => openGroup(group)
+        );
+
+        conversationList.appendChild(div);
+
+    });
+
+
+    // =========================
+    // PERSONAL CONVERSATIONS
+    // =========================
+
+    conversations.forEach((user) => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "user";
+
+        div.innerHTML = `
+            <h4>
+                👤 ${user.username}
+            </h4>
+
+            <p>
+                ${user.email}
+            </p>
+        `;
+
+        div.addEventListener(
+            "click",
+            () => openChat(
+                user.email,
+                user.username
+            )
+        );
+
+        conversationList.appendChild(div);
+
+    });
+}
 
 function resetAIState() {
   // Invalidate previous smart-reply request
@@ -112,30 +190,6 @@ async function getTypingSuggestions(text) {
 
     clearTypingSuggestions();
   }
-}
-
-function showTypingSuggestions(suggestions) {
-  typingSuggestions.innerHTML = "";
-
-  if (!suggestions || suggestions.length === 0) {
-    return;
-  }
-
-  suggestions.forEach((suggestion) => {
-    const button = document.createElement("button");
-
-    button.type = "button";
-
-    button.className = "ai-suggestion";
-
-    button.innerText = suggestion;
-
-    button.addEventListener("click", () => {
-      addSuggestionToInput(suggestion);
-    });
-
-    typingSuggestions.appendChild(button);
-  });
 }
 
 function showTypingSuggestions(suggestions) {

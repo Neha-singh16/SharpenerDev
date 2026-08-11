@@ -3,29 +3,62 @@ const BASE_URL = "http://localhost:3000/chat";
 let selectedEmail = null;
 let roomId = "";
 
-// Search button
+// ======================================================
+// SEARCH BUTTON
+// ======================================================
+
 document.getElementById("searchBtn").addEventListener("click", searchUser);
 
 
-function showUser(user) {
-  const conversationList = document.getElementById("conversationList");
+async function loadConversations() {
 
-  conversationList.innerHTML += `
-        <div
-            class="user"
-            onclick='openChat(
-                "${user.email}",
-                "${user.username}"
-            )'
-        >
+    try {
 
-            <h4>👤 ${user.username}</h4>
+        const res = await axios.get(
+            `${BASE_URL}/conversations`,
+            {
+                headers: {
+                    Authorization:
+                        `Bearer ${token}`
+                }
+            }
+        );
 
-            <p>${user.email}</p>
+        conversations =
+            res.data.conversations;
 
-        </div>
-    `;
+        renderConversationList();
+
+    } catch (err) {
+
+        console.error(
+            "Failed to load conversations:",
+            err
+        );
+
+    }
 }
+function addConversation(user) {
+  const exists = conversations.some(
+    (conversation) => conversation.userId === user.id,
+  );
+
+  if (exists) {
+    return;
+  }
+
+  conversations.push({
+    userId: user.id,
+    username: user.username,
+    email: user.email,
+  });
+
+  renderConversationList();
+}
+
+// ======================================================
+// SEARCH USER
+// ======================================================
 
 async function searchUser() {
   try {
@@ -35,122 +68,125 @@ async function searchUser() {
       return alert("Enter email");
     }
 
-    console.log("EMAIL BEING SENT:", email);
-
     const res = await axios.get(`${BASE_URL}/search`, {
       params: {
-        email: email,
+        email,
       },
+
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    console.log("SEARCH API RESPONSE:", res.data);
+    const user = res.data.user;
 
-    showUser(res.data.user);
-    emailInput.value= "";
+    addConversation(user);
+
+    document.getElementById("emailInput").value = "";
   } catch (err) {
-    console.log("SEARCH ERROR:", err.response?.data || err);
+    console.error(err);
 
     alert(err.response?.data?.error || "User not found");
   }
 }
+// ======================================================
+// SHOW SEARCH RESULT
+// ======================================================
 
-async function loadConversations() {
+function showUser(user) {
+  const conversationList = document.getElementById("conversationList");
+
+  const div = document.createElement("div");
+
+  div.className = "user";
+
+  div.innerHTML = `
+
+        <h4>
+            👤 ${user.username}
+        </h4>
+
+        <p>
+            ${user.email}
+        </p>
+
+    `;
+
+  div.addEventListener("click", () => {
+    openChat(user.email, user.username);
+  });
+
+  conversationList.appendChild(div);
+}
+
+// ======================================================
+// CREATE PERSONAL ROOM
+// ======================================================
+
+function createRoom(email1, email2) {
+  return [email1, email2].sort().join("_");
+}
+
+// ======================================================
+// OPEN PERSONAL CHAT
+// ======================================================
+
+function openChat(email, username) {
+  selectedGroupId = null;
+
+  resetAIState();
+
+  selectedEmail = email;
+
+  roomId = createRoom(currentUserEmail, email);
+
+  updateChatHeader(username, "Personal Chat");
+
+  socket.emit("join-room", roomId);
+
+  loadRoomMessages(roomId);
+}
+
+// ======================================================
+// LOAD PERSONAL CHAT MESSAGES
+// ======================================================
+
+async function loadRoomMessages(roomId) {
   try {
-    const res = await axios.get(`${BASE_URL}/messages`, {
+    const res = await axios.get(`${BASE_URL}/messages/${roomId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    showUsers(res.data.chats);
+    clearChat();
+
+    clearSmartReplies();
+
+    const chats = res.data.chats;
+
+    chats.forEach(displayMessage);
+
+    // Latest incoming message
+    const latestMessage = chats[chats.length - 1];
+
+    if (
+      latestMessage &&
+      latestMessage.userId !== currentUserId &&
+      latestMessage.message &&
+      !latestMessage.mediaUrl
+    ) {
+      await generateSmartReplies(latestMessage.message);
+    }
   } catch (err) {
-    console.log("Failed to load conversations:", err);
+    console.log("Load room messages error:", err);
   }
 }
 
+// ======================================================
+// SEND PERSONAL MESSAGE
+// ======================================================
 
-  //  Create Personal Room
-function createRoom(email1, email2) {
-  return [email1, email2]
-
-    .sort()
-
-    .join("_");
-}
-
-
-  //  Open Chat
-function openChat(email, username) {
-  selectedGroupId = null;
-  resetAIState();
-  selectedEmail = email;
-
-  roomId = createRoom(
-    currentUserEmail,
-
-    email,
-  );
-
-  updateChatHeader(
-    username,
-
-    "Personal Chat",
-  );
-
-  socket.emit(
-    "join-room",
-
-    roomId,
-  );
-
-  loadRoomMessages(roomId);
-}
-async function loadRoomMessages(roomId) {
-
-    try {
-
-        const res = await axios.get(
-            `${BASE_URL}/messages/${roomId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-
-        clearChat();
-        clearSmartReplies();
-
-        const chats = res.data.chats;
-
-        chats.forEach(displayMessage);
-
-
-        // Smart replies for latest incoming message
-        const latestMessage = chats[chats.length - 1];
-
-        if (
-            latestMessage &&
-            latestMessage.userId !== currentUserId &&
-            latestMessage.message &&
-            !latestMessage.mediaUrl
-        ) {
-
-            await generateSmartReplies(
-                latestMessage.message
-            );
-        }
-
-    } catch (err) {
-
-        console.log(err);
-
-    }
-}
-  //  Send Message
 async function sendPersonalMessage(message) {
   try {
     await axios.post(
@@ -158,7 +194,6 @@ async function sendPersonalMessage(message) {
 
       {
         roomId,
-
         message,
       },
 
@@ -168,7 +203,11 @@ async function sendPersonalMessage(message) {
         },
       },
     );
+
+    // Refresh sidebar so the conversation
+    // is definitely present after first message
+    await loadConversations();
   } catch (err) {
-    console.log(err);
+    console.log("Send personal message error:", err);
   }
 }

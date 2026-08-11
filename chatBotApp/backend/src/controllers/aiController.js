@@ -1,4 +1,5 @@
 const geminiService = require("../services/geminiService");
+const chatService = require("../services/chatService");
 
 async function predictTyping(req, res) {
   try {
@@ -24,37 +25,35 @@ async function predictTyping(req, res) {
     });
   }
 }
+async function smartReplies(req, res) {
 
-async function smartReplies(req,res){
-    try{
-        const {message} = req.body;
-          if (!message || !message.trim()) {
+    try {
 
-            return res.status(400).json({
-                error: "Message is required"
-            });
+        const { message } = req.body;
 
-        }
+        const recentMessages =
+            await chatService.getUserRecentMessages(
+                req.user.id
+            );
 
         const replies =
             await geminiService.generateSmartReplies(
-                message.trim()
+                message,
+                recentMessages
             );
 
         res.status(200).json({
             replies
         });
 
+    } catch (err) {
 
-    }catch(err){
-          console.error(
-            "Smart replies error:",
-            err
-        );
+        console.error(err);
 
         res.status(500).json({
-            error: "Failed to generate smart replies"
+            error: err.message
         });
+
     }
 }
 

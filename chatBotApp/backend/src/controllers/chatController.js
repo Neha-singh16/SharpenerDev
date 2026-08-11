@@ -1,4 +1,3 @@
-
 const chatService = require("../services/chatService");
 
 // ==========================================
@@ -78,6 +77,21 @@ async function getAllMessages(req, res) {
   }
 }
 
+async function getConversations(req, res) {
+  try {
+    const conversations = await chatService.getConversations(req.user.id);
+
+    res.status(200).json({
+      conversations,
+    });
+  } catch (err) {
+    console.error("Get conversations error:", err);
+
+    res.status(500).json({
+      error: "Failed to load conversations",
+    });
+  }
+}
 // ==========================================
 // GET PERSONAL CHAT
 // ==========================================
@@ -105,8 +119,8 @@ async function getRoomMessages(req, res) {
 async function searchEmail(req, res) {
   try {
     const { email } = req.query;
-      console.log("QUERY:", req.query);
-        console.log("EMAIL FROM QUERY:", email);
+    console.log("QUERY:", req.query);
+    console.log("EMAIL FROM QUERY:", email);
 
     const user = await chatService.searchEmail(email);
 
@@ -122,7 +136,7 @@ async function searchEmail(req, res) {
       user,
     });
   } catch (err) {
-      console.log("SEARCH ERROR:", err);
+    console.log("SEARCH ERROR:", err);
 
     res.status(500).json({
       error: err.message,
@@ -134,6 +148,8 @@ module.exports = {
   postMessage,
 
   getAllMessages,
+
+  getConversations,
 
   getRoomMessages,
 

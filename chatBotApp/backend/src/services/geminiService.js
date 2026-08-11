@@ -60,36 +60,43 @@ Output:
 }
 
 
-async function generateSmartReplies(message) {
+async function generateSmartReplies(message, recentMessages=[]) {
 
-    const prompt = `
-You are an AI assistant helping users reply to messages in a chat application.
+   const prompt = `
+You are a smart reply assistant for a chat application.
 
-Incoming message:
+Generate 3 short replies to the incoming message.
+
+INCOMING MESSAGE:
 "${message}"
 
-Generate exactly 3 short, natural reply options.
+USER'S RECENT MESSAGES:
+${recentMessages.join("\n")}
+
+Analyze the user's communication style.
+
+Pay attention to:
+- Formal or casual language
+- Hindi / English / Hinglish usage
+- Emoji usage
+- Short or long sentences
+- Repeated expressions
+- Lowercase/uppercase style
+- Tone
+
+Generate replies that sound like THIS USER would naturally write them.
 
 Rules:
-- Replies must be relevant to the incoming message.
-- Keep them concise and conversational.
-- Each reply should be different.
-- Do not use explanations.
-- Do not include numbering.
-- Return ONLY valid JSON.
-- Return an array containing exactly 3 strings.
+- Keep replies short.
+- Keep them relevant to the incoming message.
+- Match the user's tone.
+- Use emojis only if the user commonly uses them.
+- Don't overuse emojis.
+- Don't make replies unnecessarily formal.
+- Return ONLY a JSON array of 3 strings.
 
 Example:
-
-Input:
-"Are you coming to the meeting?"
-
-Output:
-[
-    "Yes, I'll be there.",
-    "Running late, will join soon.",
-    "Can we reschedule?"
-]
+["haan 😂", "yesss sure", "thodi der me aaungi"]
 `;
 
     const result = await model.generateContent(prompt);

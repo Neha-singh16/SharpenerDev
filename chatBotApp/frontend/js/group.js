@@ -49,31 +49,39 @@ async function createGroup() {
 
     document.getElementById("memberEmails").value = "";
 
-    loadGroups();
+  await loadGroups();
   } catch (err) {
     console.log(err);
   }
 }
 
-//  LOAD GROUPS
 async function loadGroups() {
-  try {
-    const res = await axios.get(
-      GROUP_BASE_URL,
 
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    try {
 
-    showGroups(res.data.groups);
-  } catch (err) {
-    console.log(err);
-  }
+        const res = await axios.get(
+            GROUP_BASE_URL,
+            {
+                headers: {
+                    Authorization:
+                        `Bearer ${token}`
+                }
+            }
+        );
+
+        groups = res.data.groups;
+
+        renderConversationList();
+
+    } catch (err) {
+
+        console.error(
+            "Failed to load groups:",
+            err
+        );
+
+    }
 }
-
 // SHOW GROUPS
 function showGroups(groups) {
   const conversationList = document.getElementById("conversationList");
@@ -162,7 +170,6 @@ function sendGroupMessage(message) {
     message,
   });
 }
-
 
 // socket.on("receive-group-message", (chat) => {
 //   displayMessage(chat);
