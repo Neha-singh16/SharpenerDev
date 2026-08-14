@@ -6,7 +6,7 @@ const {  getProfile,
 
 const router = express.Router();
 
-router.get("/", authenticate, getProfile);
-router.put("/", authenticate, updateProfile);
+router.get("/me", authenticate, getProfile);
+router.put("/me", authenticate, updateProfile);
 
 module.exports = router;

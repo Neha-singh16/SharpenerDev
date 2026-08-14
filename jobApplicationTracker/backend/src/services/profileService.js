@@ -40,6 +40,7 @@ async function updateProfile(userId, profileData) {
     }
 
     const allowedFields = [
+        "name",
         "phone",
         "location",
         "careerGoal",
@@ -59,4 +60,9 @@ async function updateProfile(userId, profileData) {
     await profile.update(updates);
 
     return profile;
+}
+
+module.exports = {
+    getProfile,
+    updateProfile
 }
