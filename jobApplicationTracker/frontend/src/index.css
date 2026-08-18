@@ -963,7 +963,21 @@ button:disabled {
 
   resize: vertical;
 }
+.reminder-card.completed {
+  opacity: 0.55;
+}
 
+.reminder-card.completed h3 {
+  text-decoration: line-through;
+}
+
+.reminder-completed-label {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
 .reminder-form input:focus,
 .reminder-form textarea:focus {
   border-color: #635bff;

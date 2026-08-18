@@ -57,6 +57,8 @@ function Navbar() {
         >
           Companies
         </Link>
+
+        
         <Link
           to="/job-listings"
           className={

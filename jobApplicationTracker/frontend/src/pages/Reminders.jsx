@@ -102,6 +102,37 @@ function Reminders() {
       ) : (
         <div className="reminders-list">
           {reminders.map((reminder) => (
+            // <div
+            //   className={
+            //     reminder.isCompleted
+            //       ? "reminder-card completed"
+            //       : "reminder-card"
+            //   }
+            //   key={reminder.id}
+            // >
+            //   <div>
+            //     <h3>{reminder.title}</h3>
+
+            //     {reminder.message && <p>{reminder.message}</p>}
+
+            //     <small>{new Date(reminder.reminderAt).toLocaleString()}</small>
+            //   </div>
+
+            //   <div className="reminder-actions">
+            //     {!reminder.isCompleted && (
+            //       <button onClick={() => completeReminder(reminder.id)}>
+            //         Complete
+            //       </button>
+            //     )}
+
+            //     <button
+            //       className="danger-btn"
+            //       onClick={() => deleteReminder(reminder.id)}
+            //     >
+            //       Delete
+            //     </button>
+            //   </div>
+            // </div>
             <div
               className={
                 reminder.isCompleted
@@ -111,11 +142,18 @@ function Reminders() {
               key={reminder.id}
             >
               <div>
-                <h3>{reminder.title}</h3>
+                <h3>
+                  {reminder.isCompleted && "✓ "}
+                  {reminder.title}
+                </h3>
 
                 {reminder.message && <p>{reminder.message}</p>}
 
                 <small>{new Date(reminder.reminderAt).toLocaleString()}</small>
+
+                {reminder.isCompleted && (
+                  <span className="reminder-completed-label">Completed</span>
+                )}
               </div>
 
               <div className="reminder-actions">

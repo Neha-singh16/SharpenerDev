@@ -1,56 +1,113 @@
+
 const { Op } = require("sequelize");
 
 const { Reminder, User, Application } = require("../models");
-
 const { sendReminderEmail } = require("./emailService");
 
 async function processReminders() {
-  const now = new Date();
+  try {
+    const now = new Date();
 
-  const reminders = await Reminder.findAll({
-    where: {
-      reminderAt: {
-        [Op.lte]: now,
+    console.log("=================================");
+    console.log("Checking reminders:", now.toLocaleString());
+    console.log("Current UTC:", now.toISOString());
+
+    const reminders = await Reminder.findAll({
+      where: {
+        reminderAt: {
+          [Op.lte]: now,
+        },
+
+        emailSent: false,
+
+        isCompleted: false,
       },
 
-      emailSent: false,
+      include: [
+        {
+          model: User,
+          attributes: ["id", "email", "name"],
+        },
 
-      isCompleted: false,
-    },
+        {
+          model: Application,
+          attributes: ["id", "jobTitle"],
+        },
+      ],
+    });
 
-    include: [
-      {
-        model: User,
+    console.log("Due reminders found:", reminders.length);
 
-        attributes: ["id", "email"],
-      },
+    if (reminders.length === 0) {
+      console.log("No reminders are due.");
+      return;
+    }
 
-      {
-        model: Application,
+    for (const reminder of reminders) {
+      console.log("---------------------------------");
+      console.log("Processing reminder:", reminder.id);
+      console.log("Title:", reminder.title);
+      console.log("Reminder time:", reminder.reminderAt);
+      console.log("Email sent:", reminder.emailSent);
+      console.log("Completed:", reminder.isCompleted);
 
-        attributes: ["id", "jobTitle"],
-      },
-    ],
-  });
+      if (!reminder.User) {
+        console.error(
+          `User not found for reminder ${reminder.id}`,
+        );
 
-  for (const reminder of reminders) {
-    try {
-      await sendReminderEmail(
-        reminder.User.email,
+        continue;
+      }
 
-        reminder,
+      if (!reminder.Application) {
+        console.error(
+          `Application not found for reminder ${reminder.id}`,
+        );
 
-        reminder.Application,
+        continue;
+      }
+
+      console.log("Recipient:", reminder.User.email);
+      console.log(
+        "Application:",
+        reminder.Application.jobTitle,
       );
 
-      await reminder.update({
-        emailSent: true,
-      });
+      try {
+        console.log("Sending email through SendGrid...");
 
-      console.log(`Reminder email sent: ${reminder.id}`);
-    } catch (error) {
-      console.error(`Failed reminder ${reminder.id}:`, error.message);
+        await sendReminderEmail(
+          reminder.User.email,
+          reminder,
+          reminder.Application,
+        );
+
+        console.log("SendGrid accepted the email.");
+
+        await reminder.update({
+          emailSent: true,
+           isCompleted: true,
+        });
+
+        console.log(
+          `Reminder ${reminder.id} marked as emailSent=true`,
+        );
+
+      } catch (emailError) {
+        console.error(
+          "SENDGRID ERROR:",
+          emailError.response?.body || emailError,
+        );
+      }
     }
+
+    console.log("=================================");
+
+  } catch (error) {
+    console.error(
+      "REMINDER SCHEDULER ERROR:",
+      error,
+    );
   }
 }
 
