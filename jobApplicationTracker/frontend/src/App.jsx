@@ -13,6 +13,7 @@ import EditCompany from "./pages/EditCompany";
 import JobListings from "./pages/JobListings";
 import Reminders from "./pages/Reminders";
 import Profile from "./pages/Profile";
+import CreateJobListing from "./pages/CreateJobListing";
 import Signup from "./pages/signup";
 
 function App() {
@@ -93,6 +94,14 @@ function App() {
           element={
             <ProtectedRoute>
               <JobListings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/job-listings/new"
+          element={
+            <ProtectedRoute>
+              <CreateJobListing />
             </ProtectedRoute>
           }
         />

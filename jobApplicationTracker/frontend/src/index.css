@@ -1386,6 +1386,312 @@ button:disabled {
   margin-bottom: 20px;
 }
 
+
+/* =========================================================
+   ATTACHMENTS
+========================================================= */
+
+.attachments-section {
+  width: 100%;
+}
+
+.attachments-section .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.attachments-section .section-header > div {
+  flex: 1;
+}
+
+.attachments-section .section-header h2 {
+  margin-bottom: 6px;
+}
+
+.attachments-section .page-subtitle {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   UPLOAD FORM
+========================================================= */
+
+.attachment-form {
+  margin-top: 20px;
+  padding: 22px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.attachment-field {
+  margin-bottom: 18px;
+}
+
+.attachment-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.attachment-field select,
+.attachment-field input[type="file"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid #d9d9df;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+}
+
+.attachment-field select:focus,
+.attachment-field input[type="file"]:focus {
+  outline: none;
+  border-color: #6c63ff;
+}
+
+.attachment-field input[type="file"] {
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   SELECTED FILE
+========================================================= */
+
+.selected-file {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f0efff;
+  color: #444;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.selected-file strong {
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   UPLOAD BUTTON
+========================================================= */
+
+.attachment-form > button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #6c63ff;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.attachment-form > button:hover {
+  opacity: 0.9;
+}
+
+.attachment-form > button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   ATTACHMENT LIST
+========================================================= */
+
+.attachments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+
+/* =========================================================
+   ATTACHMENT CARD
+========================================================= */
+
+.attachment-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  padding: 16px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: #fff;
+
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.attachment-card:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   ATTACHMENT INFORMATION
+========================================================= */
+
+.attachment-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  min-width: 0;
+  flex: 1;
+}
+
+.attachment-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 10px;
+
+  background: #f0efff;
+
+  font-size: 20px;
+}
+
+.attachment-info h3 {
+  margin: 0 0 5px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  word-break: break-word;
+}
+
+.attachment-info p {
+  margin: 0 0 4px;
+
+  color: #555;
+
+  font-size: 13px;
+
+  text-transform: capitalize;
+}
+
+.attachment-info small {
+  color: #888;
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   DOWNLOAD / DELETE BUTTONS
+========================================================= */
+
+.attachment-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  flex-shrink: 0;
+}
+
+.attachment-actions button {
+  padding: 8px 14px;
+
+  border: 1px solid #ddd;
+  border-radius: 7px;
+
+  background: white;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.attachment-actions button:hover {
+  background: #f7f7f7;
+}
+
+
+/* DELETE BUTTON */
+
+.attachment-actions .danger-btn {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: white;
+}
+
+.attachment-actions .danger-btn:hover {
+  background: #fff1f1;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.attachments-list .empty-state {
+  padding: 25px;
+
+  border: 1px dashed #d9d9df;
+  border-radius: 10px;
+
+  text-align: center;
+
+  color: #888;
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .attachment-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .attachment-info {
+    width: 100%;
+  }
+
+  .attachment-actions {
+    width: 100%;
+  }
+
+  .attachment-actions button {
+    flex: 1;
+  }
+
+  .attachment-form {
+    padding: 16px;
+  }
+
+}
 /* =========================
    RESPONSIVE
 ========================= */
@@ -1408,6 +1714,97 @@ button:disabled {
   }
 }
 
+
+/* =========================================================
+   APPLICATION SEARCH & FILTERS
+========================================================= */
+
+.application-filters {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 14px;
+
+  margin: 20px 0;
+  padding: 18px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: #fafafa;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.filter-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.filter-field input,
+.filter-field select {
+  min-width: 160px;
+
+  padding: 10px 12px;
+
+  border: 1px solid #d9d9df;
+  border-radius: 8px;
+
+  background: white;
+
+  font-size: 14px;
+}
+
+.search-field input {
+  min-width: 230px;
+}
+
+.application-filters button {
+  padding: 10px 16px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #6c63ff;
+  color: white;
+
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.application-filters .secondary-btn {
+  background: white;
+  color: #444;
+
+  border: 1px solid #d9d9df;
+}
+
+.application-filters button:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 800px) {
+  .application-filters {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .filter-field input,
+  .filter-field select,
+  .search-field input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .application-filters button {
+    width: 100%;
+  }
+}
 /* =========================
    RESPONSIVE
 ========================= */

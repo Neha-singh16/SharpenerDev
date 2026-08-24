@@ -121,28 +121,68 @@ async function getApplications(userId, query) {
   }
 
   // Date filtering
-  if (from || to) {
-    const fromDate = new Date(`${from}T00:00:00`);
-    const toDate = new Date(`${to}T23:59:59`);
+// Date filtering
+if (from || to) {
+  const dateFilter = {};
 
-    if (fromDate > toDate) {
-      const error = new Error("from date cannot be later than to date");
+  if (from) {
+    const fromDate = new Date(
+      `${from}T00:00:00`,
+    );
+
+    if (Number.isNaN(fromDate.getTime())) {
+      const error = new Error(
+        "Invalid from date",
+      );
 
       error.statusCode = 422;
 
       throw error;
     }
-    where.appliedAt = {};
 
-    if (from) {
-      where.appliedAt[Op.gte] = new Date(`${from}T00:00:00`);
+    dateFilter[Op.gte] = fromDate;
+  }
+
+  if (to) {
+    const toDate = new Date(
+      `${to}T23:59:59`,
+    );
+
+    if (Number.isNaN(toDate.getTime())) {
+      const error = new Error(
+        "Invalid to date",
+      );
+
+      error.statusCode = 422;
+
+      throw error;
     }
 
-    if (to) {
-      where.appliedAt[Op.lte] = new Date(`${to}T23:59:59`);
+    dateFilter[Op.lte] = toDate;
+  }
+
+  if (from && to) {
+    const fromDate = new Date(
+      `${from}T00:00:00`,
+    );
+
+    const toDate = new Date(
+      `${to}T23:59:59`,
+    );
+
+    if (fromDate > toDate) {
+      const error = new Error(
+        "From date cannot be later than to date",
+      );
+
+      error.statusCode = 422;
+
+      throw error;
     }
   }
 
+  where.appliedAt = dateFilter;
+}
   // Search
     if (search) {
     where[Op.or] = [

@@ -79,6 +79,41 @@ function JobListings() {
       ) : (
         <div className="company-grid">
           {listings.map((listing) => (
+            // <div className="company-card" key={listing.id}>
+            //   <div className="company-card-top">
+            //     <div className="company-avatar">
+            //       {listing.title?.charAt(0).toUpperCase()}
+            //     </div>
+
+            //     <div>
+            //       <h2>{listing.title}</h2>
+
+            //       <p>{listing.Company?.name || "Company"}</p>
+            //     </div>
+            //   </div>
+
+            //   <div className="company-info">
+            //     {listing.location && <p>📍 {listing.location}</p>}
+
+            //     {listing.source && <p>🔗 {listing.source}</p>}
+            //   </div>
+
+            //   <div className="company-actions">
+            //     {listing.jobUrl && (
+            //       <a href={listing.jobUrl} target="_blank" rel="noreferrer">
+            //         <button>View Job</button>
+            //       </a>
+            //     )}
+
+            //     <button
+            //       className="danger-btn"
+            //       onClick={() => deleteListing(listing.id)}
+            //     >
+            //       Delete
+            //     </button>
+            //   </div>
+            // </div>
+
             <div className="company-card" key={listing.id}>
               <div className="company-card-top">
                 <div className="company-avatar">
@@ -95,8 +130,25 @@ function JobListings() {
               <div className="company-info">
                 {listing.location && <p>📍 {listing.location}</p>}
 
+                {listing.employmentType && (
+                  <p>💼 {listing.employmentType.replace("_", " ")}</p>
+                )}
+
                 {listing.source && <p>🔗 {listing.source}</p>}
+
+                {listing.status && <p>📌 Status: {listing.status}</p>}
+
+                {(listing.salaryMin || listing.salaryMax) && (
+                  <p>
+                    💰 ₹{listing.salaryMin || 0}
+                    {" - "}₹{listing.salaryMax || "Open"}
+                  </p>
+                )}
               </div>
+
+              {listing.description && (
+                <p className="job-description">{listing.description}</p>
+              )}
 
               <div className="company-actions">
                 {listing.jobUrl && (
