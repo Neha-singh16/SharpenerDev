@@ -1,0 +1,57 @@
+[
+  {
+    "_id": "6a8d596fcad6f7128a62ebe4",
+    "amount": 1000,
+    "description": "travel",
+    "category": "Transport",
+    "note": "",
+    "userId": "6a8d567dcad6f7128a62ebdc",
+    "createdAt": "2026-08-25T08:59:27.312Z",
+    "updatedAt": "2026-08-25T08:59:27.312Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8d5964cad6f7128a62ebe3",
+    "amount": 10000,
+    "description": "dress",
+    "category": "Shopping",
+    "note": "",
+    "userId": "6a8d567dcad6f7128a62ebdc",
+    "createdAt": "2026-08-25T08:59:16.560Z",
+    "updatedAt": "2026-08-25T08:59:16.560Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8d5958cad6f7128a62ebe2",
+    "amount": 6000,
+    "description": "shoes",
+    "category": "Shopping",
+    "note": "",
+    "userId": "6a8d567dcad6f7128a62ebdc",
+    "createdAt": "2026-08-25T08:59:04.169Z",
+    "updatedAt": "2026-08-25T08:59:04.169Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8d5950cad6f7128a62ebe1",
+    "amount": 2000,
+    "description": "Chicken biryani",
+    "category": "Food",
+    "note": "",
+    "userId": "6a8d567dcad6f7128a62ebdc",
+    "createdAt": "2026-08-25T08:58:56.037Z",
+    "updatedAt": "2026-08-25T08:58:56.037Z",
+    "__v": 0
+  },
+  {
+    "_id": "6a8d56a5cad6f7128a62ebde",
+    "amount": 1200000,
+    "description": "hie",
+    "category": "Others",
+    "note": "",
+    "userId": "6a8d567dcad6f7128a62ebdc",
+    "createdAt": "2026-08-25T08:47:33.191Z",
+    "updatedAt": "2026-08-25T08:47:33.191Z",
+    "__v": 0
+  }
+]

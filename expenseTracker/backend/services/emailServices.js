@@ -9,9 +9,9 @@ async function sendWelcomeEmail(toEmail, name) {
   console.log("To:", toEmail);
 
   const email = {
-    subject: "Welcome to ChatBot App",
+    subject: "Welcome to Expense Tracker",
     sender: {
-      name: "ChatBot App",
+      name: "Expense Tracker",
       email: "singhn5443@gmail.com",
     },
     to: [
@@ -21,7 +21,7 @@ async function sendWelcomeEmail(toEmail, name) {
       },
     ],
     htmlContent: `
-      <h1>Welcome to ChatBot App, ${name}!</h1>
+      <h1>Welcome to Expense Tracker, ${name}!</h1>
       <p>Thank you for signing up.</p>
     `,
   };
@@ -40,13 +40,13 @@ async function sendWelcomeEmail(toEmail, name) {
 }
 
 async function sendForgotPasswordEmail(toEmail, name, token) {
-//   console.log("Sending forgot password email to:", toEmail);
-const resetLink =`http://localhost:3000/users/password/resetpassword/${token}`;
+  //   console.log("Sending forgot password email to:", toEmail);
+  const resetLink = `http://localhost:3000/users/password/resetpassword/${token}`;
   const email = {
     subject: "Reset your password!",
 
     sender: {
-      name: "ChatBot App",
+      name: "Expense Tracker",
       email: "singhn5443@gmail.com",
     },
 
@@ -57,7 +57,7 @@ const resetLink =`http://localhost:3000/users/password/resetpassword/${token}`;
       },
     ],
 
-            htmlContent: `
+    htmlContent: `
             <h2>Hello ${name},</h2>
 
             <p>We received a request to reset your password.</p>
@@ -88,9 +88,8 @@ const resetLink =`http://localhost:3000/users/password/resetpassword/${token}`;
 
             <br>
 
-            <p>ChatBot App Team</p>
+            <p>Expense Tracker Team</p>
         `,
-
   };
 
   const response =

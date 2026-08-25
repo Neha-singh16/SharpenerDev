@@ -1,30 +1,63 @@
+// const Expense = require("../models/expenseModel");
+
+// const getExpenses = async (userId, page, ITEMS_PER_PAGE) => {
+//   const offset = (page - 1) * ITEMS_PER_PAGE;
+//   const { count, rows } = await Expense.findAndCountAll({
+//     where: {
+//       UserId: userId,
+//     },
+//     limit: ITEMS_PER_PAGE,
+
+//     offset: offset,
+//     order: [["createdAt", "DESC"]],
+//   });
+
+//   const hasNextPage = ITEMS_PER_PAGE * page < count;
+//   const hasPreviousPage = page > 1;
+
+//   return {
+//     expenses: rows,
+//     currentPage: page,
+//     hasNextPage: hasNextPage,
+//     nextPage: hasNextPage ? page + 1 : null,
+
+//     hasPreviousPage: hasPreviousPage,
+//     previousPage: hasPreviousPage ? page - 1 : null,
+//     lastPage: Math.ceil(count / ITEMS_PER_PAGE),
+//     totalExpenses: count,
+//   };
+// };
+
+// module.exports = {
+//   getExpenses,
+// };
+
+
 const Expense = require("../models/expenseModel");
 
-const getExpenses = async (userId, page, ITEMS_PER_PAGE) => {
-  const offset = (page - 1) * ITEMS_PER_PAGE;
-  const { count, rows } = await Expense.findAndCountAll({
-    where: {
-      UserId: userId,
-    },
-    limit: ITEMS_PER_PAGE,
+const getExpenses = async (userId, page, itemsPerPage) => {
+  const skip = (page - 1) * itemsPerPage;
 
-    offset: offset,
-    order: [["createdAt", "DESC"]],
-  });
+  const [expenses, totalExpenses] = await Promise.all([
+    Expense.find({ userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(itemsPerPage),
 
-  const hasNextPage = ITEMS_PER_PAGE * page < count;
-  const hasPreviousPage = page > 1;
+    Expense.countDocuments({ userId }),
+  ]);
+
+  const lastPage = Math.ceil(totalExpenses / itemsPerPage);
 
   return {
-    expenses: rows,
+    expenses,
     currentPage: page,
-    hasNextPage: hasNextPage,
-    nextPage: hasNextPage ? page + 1 : null,
-
-    hasPreviousPage: hasPreviousPage,
-    previousPage: hasPreviousPage ? page - 1 : null,
-    lastPage: Math.ceil(count / ITEMS_PER_PAGE),
-    totalExpenses: count,
+    hasNextPage: page < lastPage,
+    nextPage: page < lastPage ? page + 1 : null,
+    hasPreviousPage: page > 1,
+    previousPage: page > 1 ? page - 1 : null,
+    lastPage,
+    totalExpenses,
   };
 };
 

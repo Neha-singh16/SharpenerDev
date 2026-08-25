@@ -26,6 +26,7 @@ const dynamicFilter = document.getElementById("dynamicFilter");
 
 let editExpenseId = null;
 let allExpenses = [];
+let hasAppliedFilter = false;
 let filteredReportExpenses = [];
 let leaderboardLoaded = false;
 let isPremiumUser = false;
@@ -34,8 +35,12 @@ let ITEMS_PER_PAGE = Number(localStorage.getItem("itemsPerPage")) || 10;
 
 itemsPerPage.addEventListener("change", () => {
   ITEMS_PER_PAGE = Number(itemsPerPage.value);
+
   localStorage.setItem("itemsPerPage", ITEMS_PER_PAGE);
-  loadExpenses(currentPage);
+
+  currentPage = 1;
+
+  loadExpenses(1);
 });
 
 const token = localStorage.getItem("token");
@@ -61,33 +66,38 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
 form.addEventListener("submit", addExpense);
-reportFilter.addEventListener("change", renderFilterInputs);
+reportFilter.addEventListener("change", () => {
+  hasAppliedFilter = false;
+  filteredReportExpenses = [];
+  renderFilterInputs();
+});
 
 renderFilterInputs();
 
 // reportFilter.addEventListener("change", updateReport);
 document
-.getElementById("applyFilterBtn")
-.addEventListener("click", updateReport);
+  .getElementById("applyFilterBtn")
+  .addEventListener("click", updateReport);
 downloadReportBtn.addEventListener("click", downloadReport);
-
 
 logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("token");
   window.location.href = "login.html";
 });
-
-async function loadExpenses(page) {
+async function loadExpenses(page = 1) {
   try {
-    currentPage = page || 1;
+    currentPage = page;
+
     const res = await axios.get(
-      `${BASE_URL}/expenses?page=${currentPage}&limit=${ITEMS_PER_PAGE}`,
+      `${BASE_URL}/expenses?page=${currentPage}&itemsPerPage=${ITEMS_PER_PAGE}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       },
     );
+
+    console.log("Expenses response:", res.data);
 
     allExpenses = res.data.expenses;
     expenseList.innerHTML = "";
@@ -97,6 +107,7 @@ async function loadExpenses(page) {
     });
 
     showPagination(res.data);
+
     if (isPremiumUser) {
       updateReport();
     }
@@ -163,7 +174,7 @@ async function addExpense(e) {
     form.reset();
     // await loadExpenses();
     await loadExpenses(currentPage);
-    
+
     // Refresh leaderboard if it's being displayed
     if (leaderboardLoaded) {
       leaderboardLoaded = false;
@@ -243,38 +254,26 @@ async function showLeaderboard() {
   }
 }
 
-
-
-
-
 function renderFilterInputs() {
+  const filter = reportFilter.value;
 
-    const filter = reportFilter.value;
+  dynamicFilter.innerHTML = "";
 
-    dynamicFilter.innerHTML = "";
-
-    if (filter === "Daily") {
-
-        dynamicFilter.innerHTML = `
+  if (filter === "Daily") {
+    dynamicFilter.innerHTML = `
             <label>Select Date</label>
             <input type="date" id="selectedDate" class="form-control">
         `;
-    }
-
-    else if (filter === "Weekly") {
-
-        dynamicFilter.innerHTML = `
+  } else if (filter === "Weekly") {
+    dynamicFilter.innerHTML = `
             <label>Start Date</label>
             <input type="date" id="startDate" class="form-control mb-2">
 
             <label>End Date</label>
             <input type="date" id="endDate" class="form-control">
         `;
-    }
-
-    else if (filter === "Monthly") {
-
-        dynamicFilter.innerHTML = `
+  } else if (filter === "Monthly") {
+    dynamicFilter.innerHTML = `
             <label>Month</label>
 
             <select id="selectedMonth" class="form-select mb-2">
@@ -303,11 +302,8 @@ function renderFilterInputs() {
                 class="form-control"
             >
         `;
-    }
-
-    else if (filter === "Yearly") {
-
-        dynamicFilter.innerHTML = `
+  } else if (filter === "Yearly") {
+    dynamicFilter.innerHTML = `
             <label>Year</label>
 
             <input
@@ -317,91 +313,48 @@ function renderFilterInputs() {
                 class="form-control"
             >
         `;
-    }
-
+  }
 }
 
 function filterExpensesByPeriod(expenses, filter) {
+  return expenses.filter((expense) => {
+    const expenseDate = new Date(expense.createdAt);
 
-    return expenses.filter((expense) => {
+    if (filter === "Daily") {
+      const selected = new Date(document.getElementById("selectedDate").value);
 
-        const expenseDate = new Date(expense.createdAt);
+      return expenseDate.toDateString() === selected.toDateString();
+    }
 
-        if (filter === "Daily") {
+    if (filter === "Weekly") {
+      const start = new Date(document.getElementById("startDate").value);
 
-            const selected = new Date(
-                document.getElementById("selectedDate").value
-            );
+      const end = new Date(document.getElementById("endDate").value);
 
-            return expenseDate.toDateString() === selected.toDateString();
-        }
+      end.setHours(23, 59, 59, 999);
 
-        if (filter === "Weekly") {
+      return expenseDate >= start && expenseDate <= end;
+    }
 
-            const start = new Date(
-                document.getElementById("startDate").value
-            );
+    if (filter === "Monthly") {
+      const month = Number(document.getElementById("selectedMonth").value);
 
-            const end = new Date(
-                document.getElementById("endDate").value
-            );
+      const year = Number(document.getElementById("selectedYear").value);
 
-            end.setHours(23,59,59,999);
+      return (
+        expenseDate.getMonth() === month && expenseDate.getFullYear() === year
+      );
+    }
 
-            return expenseDate >= start && expenseDate <= end;
-        }
+    if (filter === "Yearly") {
+      const year = Number(document.getElementById("selectedYear").value);
 
-        if (filter === "Monthly") {
+      return expenseDate.getFullYear() === year;
+    }
 
-            const month = Number(
-                document.getElementById("selectedMonth").value
-            );
-
-            const year = Number(
-                document.getElementById("selectedYear").value
-            );
-
-            return expenseDate.getMonth() === month &&
-                   expenseDate.getFullYear() === year;
-        }
-
-        if (filter === "Yearly") {
-
-            const year = Number(
-                document.getElementById("selectedYear").value
-            );
-
-            return expenseDate.getFullYear() === year;
-        }
-
-        return true;
-
-    });
-
+    return true;
+  });
 }
-
-// function filterExpensesByPeriod(expenses, filter) {
-//   const now = new Date();
-
-//   return expenses.filter((expense) => {
-//     const expenseDate = new Date(expense.createdAt);
-
-//     if (filter === "Daily") {
-//       return expenseDate.toDateString() === now.toDateString();
-//     }
-
-//     if (filter === "Weekly") {
-//       const weekAgo = new Date(now);
-//       weekAgo.setDate(now.getDate() - 7);
-//       return expenseDate >= weekAgo && expenseDate <= now;
-//     }
-
-//     return (
-//       expenseDate.getMonth() === now.getMonth() &&
-//       expenseDate.getFullYear() === now.getFullYear()
-//     );
-//   });
-// }
 
 function formatDate(dateString) {
   return new Date(dateString).toLocaleDateString("en-IN", {
@@ -410,15 +363,61 @@ function formatDate(dateString) {
     year: "numeric",
   });
 }
-
 function updateReport() {
   const filter = reportFilter.value;
+
+  // Validate the filter before applying it
+  if (filter === "Daily") {
+    const selectedDate = document.getElementById("selectedDate").value;
+
+    if (!selectedDate) {
+      alert("Please select a date first.");
+      return;
+    }
+  }
+
+  if (filter === "Weekly") {
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+
+    if (!startDate || !endDate) {
+      alert("Please select both start and end dates.");
+      return;
+    }
+
+    if (new Date(startDate) > new Date(endDate)) {
+      alert("Start date cannot be after end date.");
+      return;
+    }
+  }
+
+  if (filter === "Monthly") {
+    const year = document.getElementById("selectedYear").value;
+
+    if (!year) {
+      alert("Please select a year.");
+      return;
+    }
+  }
+
+  if (filter === "Yearly") {
+    const year = document.getElementById("selectedYear").value;
+
+    if (!year) {
+      alert("Please select a year.");
+      return;
+    }
+  }
+
   filteredReportExpenses = filterExpensesByPeriod(allExpenses, filter);
+
+  hasAppliedFilter = true;
 
   const total = filteredReportExpenses.reduce(
     (sum, expense) => sum + Number(expense.amount),
     0,
   );
+
   const count = filteredReportExpenses.length;
   const average = count ? total / count : 0;
 
@@ -441,42 +440,17 @@ function updateReport() {
 
   filteredReportExpenses.forEach((expense) => {
     const row = document.createElement("tr");
+
     row.innerHTML = `
       <td>${formatDate(expense.createdAt)}</td>
       <td>${expense.description}</td>
       <td>${expense.category}</td>
       <td><strong>₹${expense.amount}</strong></td>
     `;
+
     reportTableBody.appendChild(row);
   });
 }
-
-// function downloadReport() {
-//   if (!filteredReportExpenses.length) {
-//     alert("No expenses to download for the selected period.");
-//     return;
-//   }
-
-//   const filter = reportFilter.value;
-//   const headers = ["Date", "Description", "Category", "Amount"];
-//   const rows = filteredReportExpenses.map((expense) => [
-//     formatDate(expense.createdAt),
-//     expense.description,
-//     expense.category,
-//     expense.amount,
-//   ]);
-
-//   const csvContent = [headers, ...rows]
-//     .map((row) => row.map((cell) => `"${cell}"`).join(","))
-//     .join("\n");
-
-//   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-//   const link = document.createElement("a");
-//   link.href = URL.createObjectURL(blob);
-//   link.download = `expense-report-${filter.toLowerCase()}.csv`;
-//   link.click();
-//   URL.revokeObjectURL(link.href);
-// }
 
 async function downloadReport() {
   try {
@@ -487,26 +461,123 @@ async function downloadReport() {
       return;
     }
 
-    // Step 1: Get the filename from the backend
-    const res = await axios.get(
-      `${BASE_URL}/download`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    if (!res.data.success || !res.data.fileURL) {
-      alert("Failed to generate download URL");
+    // User must apply filter first
+    if (!hasAppliedFilter) {
+      alert(
+        "Please select a filter and click Apply Filter before downloading.",
+      );
       return;
     }
 
-    // Step 2: Download the file using fetch with Authorization header
+    // Don't download an empty report
+    if (filteredReportExpenses.length === 0) {
+      alert("No expenses found for the selected filter.");
+      return;
+    }
+
+    const filter = reportFilter.value;
+
+    const filterData = {
+      filter,
+    };
+
+    // ==========================================
+    // DAILY
+    // ==========================================
+
+    if (filter === "Daily") {
+      const selectedDate = document.getElementById("selectedDate").value;
+
+      if (!selectedDate) {
+        alert("Please select a date.");
+        return;
+      }
+
+      filterData.selectedDate = selectedDate;
+    }
+
+    // ==========================================
+    // WEEKLY
+    // ==========================================
+
+    if (filter === "Weekly") {
+      const startDate = document.getElementById("startDate").value;
+
+      const endDate = document.getElementById("endDate").value;
+
+      if (!startDate || !endDate) {
+        alert("Please select both start and end dates.");
+        return;
+      }
+
+      if (new Date(startDate) > new Date(endDate)) {
+        alert("Start date cannot be after end date.");
+        return;
+      }
+
+      filterData.startDate = startDate;
+
+      filterData.endDate = endDate;
+    }
+
+    // ==========================================
+    // MONTHLY
+    // ==========================================
+
+    if (filter === "Monthly") {
+      const month = document.getElementById("selectedMonth").value;
+
+      const year = document.getElementById("selectedYear").value;
+
+      if (!year) {
+        alert("Please select a year.");
+        return;
+      }
+
+      filterData.month = month;
+
+      filterData.year = year;
+    }
+
+    // ==========================================
+    // YEARLY
+    // ==========================================
+
+    if (filter === "Yearly") {
+      const year = document.getElementById("selectedYear").value;
+
+      if (!year) {
+        alert("Please select a year.");
+        return;
+      }
+
+      filterData.year = year;
+    }
+
+    console.log("Sending filter to backend:", filterData);
+
+    // ==========================================
+    // STEP 1: CREATE EXCEL FILE
+    // ==========================================
+
+    const res = await axios.post(`${BASE_URL}/download`, filterData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.data.success || !res.data.fileURL) {
+      alert("Failed to generate Excel file.");
+      return;
+    }
+
     const filename = res.data.fileURL;
+
+    // ==========================================
+    // STEP 2: DOWNLOAD FILE
+    // ==========================================
+
     const downloadUrl = `${BASE_URL}/download/${filename}`;
-    
-    console.log("Downloading from:", downloadUrl);
 
     const fileRes = await fetch(downloadUrl, {
       headers: {
@@ -515,24 +586,37 @@ async function downloadReport() {
     });
 
     if (!fileRes.ok) {
-      alert("Failed to download file: " + fileRes.statusText);
-      return;
+      const errorData = await fileRes.json().catch(() => ({}));
+
+      throw new Error(errorData.error || "Failed to download file.");
     }
 
-    // Step 3: Create a blob and download
+    // ==========================================
+    // STEP 3: DOWNLOAD BLOB
+    // ==========================================
+
     const blob = await fileRes.blob();
+
     const url = window.URL.createObjectURL(blob);
+
     const a = document.createElement("a");
+
     a.href = url;
+
     a.download = filename;
+
     document.body.appendChild(a);
+
     a.click();
-    window.URL.revokeObjectURL(url);
+
     document.body.removeChild(a);
 
-    console.log("File downloaded successfully!");
+    window.URL.revokeObjectURL(url);
+
+    console.log("Excel file downloaded successfully!");
   } catch (err) {
     console.error("Download error:", err);
+
     alert("Download failed: " + (err.response?.data?.error || err.message));
   }
 }
@@ -567,7 +651,7 @@ function displayExpense(expense) {
   const deleteBtn = document.createElement("button");
   deleteBtn.className = "btn btn-danger btn-sm";
   deleteBtn.innerText = "Delete";
-  deleteBtn.onclick = () => deleteExpense(expense.id);
+  deleteBtn.onclick = () => deleteExpense(expense._id);
 
   btnDiv.append(editBtn, deleteBtn);
   li.append(btnDiv);
@@ -588,11 +672,13 @@ async function deleteExpense(expenseId) {
     console.log(err);
   }
 }
-
 function editExpense(expense) {
+  console.log("Editing expense:", expense);
+
   amount.value = expense.amount;
   description.value = expense.description;
-  category.value = expense.category;
-  editExpenseId = expense.id;
+
+  editExpenseId = expense._id;
+
   submitBtn.innerHTML = "Update Expense";
 }
